@@ -1,0 +1,92 @@
+public class Assignment1{
+
+    //METHOD 1
+    public Integer method1(List<Integer> arr)
+    {
+        Integer totalsum=0;
+        for(Integer i=0 ; i<arr.size() ; i++)
+        {
+            totalsum+=arr[i];
+        }
+        return totalsum;
+    }
+
+    //METHOD 2
+    public void method2(Integer n)
+    {
+        for(Integer i=0 ; i<n ; i++)
+        {
+            String res='';
+            for(Integer j=0 ; j<i+1 ; j++)
+            {
+                res+='* ';
+            }
+            System.debug(res);
+        }
+    }
+
+    //METHOD 3
+    public List<Integer> method3(List<Integer> arr, List<Integer> even)
+    {
+        for(integer i=0 ; i<arr.size() ; i++)
+        {
+            if(math.mod(arr[i],2)==0)
+            {
+                even.add(arr[i]);
+            }
+            else
+            {
+                continue;
+            }
+        }
+        return even;
+    }
+
+    //METHOD 4
+    public Map<string,List<Integer>> method4(List<Integer> arr, Map<String,List<Integer>> res,List<Integer> odd,List<Integer> even)
+    {
+        for(Integer i=0 ; i<arr.size() ; i++)
+        {
+            if(Math.mod(arr[i],2)!=0)
+            {
+                odd.add(arr[i]);
+            }
+            else
+            {
+                even.add(arr[i]);
+            }
+        }
+        res.put('Odd',odd);
+        res.put('Even',even);
+        return res;
+    }
+
+    //METHOD 5
+     public Boolean method5(List<Integer> arr)
+     {
+         if(math.mod(method1(arr),2)==0)
+         {
+             return True;
+         }
+         else
+         {
+             return False;
+         }
+     }
+
+    //METHOD 6
+    public Date method6(Date inp)
+    {
+        Date TodayDate=Date.today();
+        Integer NewYear;
+		if(inp.year()<TodayDate.year() && inp.month()<todaydate.month())
+        {
+            NewYear=TodayDate.year()+1; 
+        }
+        else
+        {
+            NewYear=TodayDate.year();        
+        }
+        return Date.newInstance(NewYear,inp.month(),inp.day());
+    }
+}
