@@ -1,0 +1,37 @@
+//COMMON LIST FOR ALL METHODS
+List<Integer> arr1=new List<Integer>{1,2,3,4,5,6,7,8,9,10};
+    
+//OBJECT CREATION
+Assignment1 assignobj=new Assignment1();
+
+//FOR METHOD 1
+System.debug('Sum of all - '+assignobj.method1(arr1));
+
+//FOR METHOD 2
+Integer n=4;
+assignobj.method2(n);
+
+//FOR METHOD 3
+List<integer> res=new List<Integer>();
+assignobj.method3(arr1,res);
+System.debug(res);
+
+//FOR METHOD 4
+Map<String,List<Integer>> resu= new Map<String,List<Integer>>();
+List<Integer> odd=new List<Integer>();
+List<Integer> even=new List<Integer>();
+System.debug(assignobj.method4(arr1,resu,odd,even));
+
+//FOR METHOD 5
+if(assignobj.method5(arr1)==True)
+{
+    System.debug('TotalSum is an Even no.');
+}
+else
+{
+    System.debug('TotalSum is an Odd no.');
+}
+
+//FOR METHOD 6
+Date DOB = Date.newInstance(2001, 3, 26);
+System.debug(assignobj.method6(DOB));
