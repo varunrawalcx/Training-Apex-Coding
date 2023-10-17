@@ -39,21 +39,19 @@ public class Assignment1{
         return Even_List;
     }
     //METHOD 4
-    public Map<string,List<Integer>> Odd_Even_List(List<Integer> List_Of_Number, Map<String,List<Integer>> Odd_Even_Filtered_Map,List<Integer> Odd_List,List<Integer> Even_List)
+    public Map<string,List<Integer>> Odd_Even_List(List<Integer> List_Of_Number, Map<String,List<Integer>> Odd_Even_Filtered_Map)
     {
         for(Integer i=0 ; i<List_Of_Number.size() ; i++)
         {
             if(Math.mod(List_Of_Number[i],2)!=0)
             {
-                Odd_List.add(List_Of_Number[i]);
+                Odd_Even_Filtered_Map.get('Odd').add(List_Of_number[i]);
             }
             else
             {
-                Even_List.add(List_Of_Number[i]);
+                Odd_Even_Filtered_Map.get('Even').add(List_Of_number[i]);
             }
         }
-        Odd_Even_Filtered_Map.put('Odd',Odd_List);
-        Odd_Even_Filtered_Map.put('Even',Even_List);
         return Odd_Even_Filtered_Map;
     }
     //METHOD 5
