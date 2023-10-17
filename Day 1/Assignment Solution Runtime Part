@@ -18,9 +18,9 @@ System.debug(Even_Filtered_list);
 
 //FOR METHOD 4
 Map<String,List<Integer>> Odd_Even_Filtered_Map= new Map<String,List<Integer>>();
-List<Integer> Odd_List=new List<Integer>();
-List<Integer> Even_List=new List<Integer>();
-System.debug(assignobj.Odd_Even_List(List_Of_Number,Odd_Even_Filtered_Map,Odd_List,Even_List));
+Odd_Even_Filtered_Map.put('Odd',new List<Integer>());
+Odd_Even_Filtered_Map.put('Even',new List<Integer>());
+System.debug(assignobj.Odd_Even_List(List_Of_Number,Odd_Even_Filtered_Map));
 
 //FOR METHOD 5
 if(assignobj.TotalSum_Is_Even_Odd(List_Of_Number)==True)
