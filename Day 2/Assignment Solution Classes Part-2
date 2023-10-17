@@ -1,0 +1,66 @@
+public class Polymorphism_Class_Assignment1 {
+
+
+    //based on returntype
+    public string TotalSum(List<String> list_of_words)
+    {
+        System.debug('This is TotalSum Method With String ReturnType');
+        String Concat_words='';
+        for(Integer i=0 ; i<list_of_words.size() ; i++)
+        {
+            Concat_words+=list_of_words[i];
+            Concat_words+='*';
+        }
+        return Concat_words;
+    }
+
+    public Integer TotalSum(List<Integer> List_Of_Number)
+    {
+        System.debug('This is TotalSum Method With Integer ReturnType');
+        Integer totalsum=0;
+        for(Integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            totalsum+=List_Of_Number[i];
+        }
+        return totalsum;
+    }
+
+
+    //based on no. of parameter
+    public void Star_Pattern(Integer Number_Of_Row1)
+    {
+        System.debug('This is Star Pattern Method With 1 Parameter');        
+        for(Integer i=0 ; i<Number_Of_Row1 ; i++)
+        {
+            String Temp_Pattern='';
+            for(Integer j=0 ; j<i+1 ; j++)
+            {
+                Temp_Pattern+='* ';
+            }
+            System.debug(Temp_Pattern);
+        }
+    }
+
+    public void Star_Pattern(Integer Number_Of_Row1 , Integer Number_Of_Row2)
+    {
+        System.debug('This is Star Pattern Method With 2 Parameter');
+        for(Integer i=0 ; i<Number_Of_Row1 ; i++)
+        {
+            String Temp_Pattern='';
+            for(Integer j=0 ; j<i+1 ; j++)
+            {
+                Temp_Pattern+='* ';
+            }
+            System.debug(Temp_Pattern);
+        }
+        for(Integer i=0 ; i<Number_Of_Row2 ; i++)
+        {
+            String Temp_Pattern='';
+            for(Integer j=0 ; j<i+1 ; j++)
+            {
+                Temp_Pattern+='* ';
+            }
+            System.debug(Temp_Pattern);
+        }
+    }
+}
