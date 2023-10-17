@@ -1,0 +1,175 @@
+public virtual class UtilityClass{
+    //METHOD 1
+    public Integer TotalSum(List<Integer> List_Of_Number)
+    {
+        Integer totalsum=0;
+        for(Integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            totalsum+=List_Of_Number[i];
+        }
+        return totalsum;
+    }
+    //METHOD 2
+    public void Star_Pattern(Integer Number_Of_Row)
+    {
+        for(Integer i=0 ; i<Number_Of_Row ; i++)
+        {
+            String Temp_Pattern='';
+            for(Integer j=0 ; j<i+1 ; j++)
+            {
+                Temp_Pattern+='* ';
+            }
+            System.debug(Temp_Pattern);
+        }
+    }
+    //METHOD 3
+    public List<Integer> Even_List(List<Integer> List_Of_Number, List<Integer> Even_List)
+    {
+        for(integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            if(math.mod(List_Of_Number[i],2)==0)
+            {
+                Even_List.add(List_Of_Number[i]);
+            }
+            else
+            {
+                continue;
+            }
+        }
+        return Even_List;
+    }
+    //METHOD 4
+    public Map<string,List<Integer>> Odd_Even_List(List<Integer> List_Of_Number, Map<String,List<Integer>> Odd_Even_Filtered_Map)
+    {
+        for(Integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            if(Math.mod(List_Of_Number[i],2)!=0)
+            {
+                Odd_Even_Filtered_Map.get('Odd').add(List_Of_number[i]);
+            }
+            else
+            {
+                Odd_Even_Filtered_Map.get('Even').add(List_Of_number[i]);
+            }
+        }
+        return Odd_Even_Filtered_Map;
+    }
+    //METHOD 5
+     public Boolean TotalSum_Is_Even_Odd(List<Integer> List_Of_Number)
+     {
+         if(math.mod(TotalSum(List_Of_Number),2)==0)
+         {
+             return True;
+         }
+         else
+         {
+             return False;
+         }
+     }
+    //METHOD 6
+    private Date Coming_Birthday(Date inp)
+    {
+        Date TodayDate=Date.today();
+        Integer NewYear;
+		if(inp.year()<TodayDate.year() && inp.month()<todaydate.month())
+        {
+            NewYear=TodayDate.year()+1; 
+        }
+        else
+        {
+            NewYear=TodayDate.year();        
+        }
+        return Date.newInstance(NewYear,inp.month(),inp.day());
+    }
+}
+public virtual class UtilityClass{
+    //METHOD 1
+    public Integer TotalSum(List<Integer> List_Of_Number)
+    {
+        Integer totalsum=0;
+        for(Integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            totalsum+=List_Of_Number[i];
+        }
+        return totalsum;
+    }
+    //METHOD 2
+    public void Star_Pattern(Integer Number_Of_Row)
+    {
+        for(Integer i=0 ; i<Number_Of_Row ; i++)
+        {
+            String Temp_Pattern='';
+            for(Integer j=0 ; j<i+1 ; j++)
+            {
+                Temp_Pattern+='* ';
+            }
+            System.debug(Temp_Pattern);
+        }
+    }
+    //METHOD 3
+    public List<Integer> Even_List(List<Integer> List_Of_Number, List<Integer> Even_List)
+    {
+        for(integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            if(math.mod(List_Of_Number[i],2)==0)
+            {
+                Even_List.add(List_Of_Number[i]);
+            }
+            else
+            {
+                continue;
+            }
+        }
+        return Even_List;
+    }
+    //METHOD 4
+    public Map<string,List<Integer>> Odd_Even_List(List<Integer> List_Of_Number, Map<String,List<Integer>> Odd_Even_Filtered_Map)
+    {
+        for(Integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            if(Math.mod(List_Of_Number[i],2)!=0)
+            {
+                Odd_Even_Filtered_Map.get('Odd').add(List_Of_number[i]);
+            }
+            else
+            {
+                Odd_Even_Filtered_Map.get('Even').add(List_Of_number[i]);
+            }
+        }
+        return Odd_Even_Filtered_Map;
+    }
+    //METHOD 5
+     public Boolean TotalSum_Is_Even_Odd(List<Integer> List_Of_Number)
+     {
+         if(math.mod(TotalSum(List_Of_Number),2)==0)
+         {
+             return True;
+         }
+         else
+         {
+             return False;
+         }
+     }
+    //METHOD 6
+    private Date Coming_Birthday(Date inp)
+    {
+        Date TodayDate=Date.today();
+        Integer NewYear;
+		if(inp.year()<TodayDate.year() && inp.month()<todaydate.month())
+        {
+            NewYear=TodayDate.year()+1; 
+        }
+        else
+        {
+            NewYear=TodayDate.year();        
+        }
+        return Date.newInstance(NewYear,inp.month(),inp.day());
+    }
+}
+public class Assignment2 extends UtilityClass
+{
+    Public Assignment2()
+    {
+        System.debug('Hello you are in Child class');
+    }
+}
