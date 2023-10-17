@@ -1,12 +1,53 @@
 Polymorphism_Class_Assignment1 assignobj= new Polymorphism_Class_Assignment1();
 
 //Based on Returntype
+//Method 1
 List<String> test1=new list<String>{'Hello','Varun','Rawal'};
-List<Integer> test2=new list<Integer>{1,2,3};
+List<Integer> test2=new list<Integer>{1,2,3,4,5,6,7,8,9,10};
 System.debug(assignobj.TotalSum(test1));
 System.debug(assignobj.TotalSum(test2));
 
 //Based on No. of Parameter
+//Method 2
 Integer num1=4;
 assignobj.Star_Pattern(num1);
 assignobj.Star_Pattern(num1 , num1);
+
+//Based on No. of Parameter
+//Method 3
+List<Integer> test3=new List<Integer>{1,2,3,4,5,6,7,8,9,10};
+List<Integer> test4=new List<Integer>();
+System.debug(assignobj.Even_Lists(test3,test4));
+System.debug(assignobj.Even_Lists(test3));
+
+//Based on No. of Parameter
+//Method 4
+Map<String,List<Integer>> ResultMap=new Map<String,List<Integer>>();
+ResultMap.put('Odd',new List<Integer>());
+ResultMap.put('Even',new List<Integer>());
+System.debug(assignobj.Odd_Even_List(test3));
+System.debug(assignobj.Odd_Even_List(test3,ResultMap));
+
+//Based on No. of Parameter
+//Method 5
+if(assignobj.TotalSum_Is_Even_Odd(test3)==True)
+{
+    System.debug('TotalSum is an Even no.');
+}
+else
+{
+    System.debug('TotalSum is an Odd no.');
+}
+if(assignobj.TotalSum_Is_Even_Odd()==True)
+{
+    System.debug('TotalSum is an Even no.');
+}
+else
+{
+    System.debug('TotalSum is an Odd no.');
+}
+//Based on No. of Parameter
+//FOR METHOD 6
+Date DOB = Date.newInstance(2001, 3, 26);
+System.debug(assignobj.Coming_Birthday(DOB));
+System.debug(assignobj.Coming_Birthday());
