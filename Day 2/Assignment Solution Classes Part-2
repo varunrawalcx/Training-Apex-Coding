@@ -1,7 +1,7 @@
 public class Polymorphism_Class_Assignment1 {
-
-
+    
     //based on returntype
+    //method 1
     public string TotalSum(List<String> list_of_words)
     {
         System.debug('This is TotalSum Method With String ReturnType');
@@ -13,7 +13,6 @@ public class Polymorphism_Class_Assignment1 {
         }
         return Concat_words;
     }
-
     public Integer TotalSum(List<Integer> List_Of_Number)
     {
         System.debug('This is TotalSum Method With Integer ReturnType');
@@ -24,9 +23,8 @@ public class Polymorphism_Class_Assignment1 {
         }
         return totalsum;
     }
-
-
     //based on no. of parameter
+    //method 2
     public void Star_Pattern(Integer Number_Of_Row1)
     {
         System.debug('This is Star Pattern Method With 1 Parameter');        
@@ -40,7 +38,6 @@ public class Polymorphism_Class_Assignment1 {
             System.debug(Temp_Pattern);
         }
     }
-
     public void Star_Pattern(Integer Number_Of_Row1 , Integer Number_Of_Row2)
     {
         System.debug('This is Star Pattern Method With 2 Parameter');
@@ -62,5 +59,137 @@ public class Polymorphism_Class_Assignment1 {
             }
             System.debug(Temp_Pattern);
         }
+    }
+    //Based on No. of Parameter
+    //Method 3
+    public List<Integer> Even_Lists(List<Integer> List_Of_Number, List<Integer> Even_List)
+    {
+        System.debug('This is Even_List Method With 2 Parameter');
+        for(integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            if(math.mod(List_Of_Number[i],2)==0)
+            {
+                Even_List.add(List_Of_Number[i]);
+            }
+            else
+            {
+                continue;
+            }
+        }
+        return Even_List;
+    }
+    public List<Integer> Even_Lists(List<Integer> List_Of_Number)
+    {
+        List<Integer> Even_List=new List<Integer>();
+        System.debug('This is Even_List Method With 1 Parameter');
+        for(integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            if(math.mod(List_Of_Number[i],2)==0)
+            {
+                Even_List.add(List_Of_Number[i]);
+            }
+            else
+            {
+                continue;
+            }
+        }
+        return Even_List;
+    }
+    //Based on No. of Parameter
+    //Method 4
+    public Map<string,List<Integer>> Odd_Even_List(List<Integer> List_Of_Number, Map<String,List<Integer>> Odd_Even_Filtered_Map)
+    {
+        System.debug('This is Odd_Even_List Method With 2 Parameter');
+        for(Integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            if(Math.mod(List_Of_Number[i],2)!=0)
+            {
+                Odd_Even_Filtered_Map.get('Odd').add(List_Of_number[i]);
+            }
+            else
+            {
+                Odd_Even_Filtered_Map.get('Even').add(List_Of_number[i]);
+            }
+        }
+        return Odd_Even_Filtered_Map;
+    }
+    public Map<string,List<Integer>> Odd_Even_List(List<Integer> List_Of_Number)
+    {
+        Map<string,List<Integer>> Odd_Even_Filtered_Map= new Map<string,List<Integer>>();
+        Odd_Even_Filtered_Map.put('Odd',new List<Integer>());
+        Odd_Even_Filtered_Map.put('Even',new List<Integer>());
+        System.debug('This is Odd_Even_List Method With 1 Parameter');
+        for(Integer i=0 ; i<List_Of_Number.size() ; i++)
+        {
+            if(Math.mod(List_Of_Number[i],2)!=0)
+            {
+                Odd_Even_Filtered_Map.get('Odd').add(List_Of_number[i]);
+            }
+            else
+            {
+                Odd_Even_Filtered_Map.get('Even').add(List_Of_number[i]);
+            }
+        }
+        return Odd_Even_Filtered_Map;
+    }
+    //Based on No. of Parameter
+    //Method 5
+    public Boolean TotalSum_Is_Even_Odd(List<Integer> List_Of_Number)
+     {
+         System.debug('This is TotalSum_Is_Even_Odd Method With 1 Parameter');
+         if(math.mod(TotalSum(List_Of_Number),2)==0)
+         {
+             return True;
+         }
+         else
+         {
+             return False;
+         }
+     }
+    public Boolean TotalSum_Is_Even_Odd()
+     {
+         List<Integer> List_Of_Number=new List<Integer>{1,2,3,4,5,6};
+         System.debug('This is TotalSum_Is_Even_Odd Method With No Parameter');
+         if(math.mod(TotalSum(List_Of_Number),2)==0)
+         {
+             return True;
+         }
+         else
+         {
+             return False;
+         }
+     }
+    //Based on No. of Parameter
+    //METHOD 6
+    public Date Coming_Birthday(Date inp)
+    {
+        System.debug('This is Coming_Birthday Method With 1 Parameter');
+        Date TodayDate=Date.today();
+        Integer NewYear;
+		if(inp.year()<TodayDate.year() && inp.month()<todaydate.month())
+        {
+            NewYear=TodayDate.year()+1; 
+        }
+        else
+        {
+            NewYear=TodayDate.year();        
+        }
+        return Date.newInstance(NewYear,inp.month(),inp.day());
+    }
+    public Date Coming_Birthday()
+    {
+        Date inp= Date.NewInstance(2001, 11, 26);
+        System.debug('This is Coming_Birthday Method With 0 Parameter');
+        Date TodayDate=Date.today();
+        Integer NewYear;
+		if(inp.year()<TodayDate.year() && inp.month()<todaydate.month())
+        {
+            NewYear=TodayDate.year()+1; 
+        }
+        else
+        {
+            NewYear=TodayDate.year();        
+        }
+        return Date.newInstance(NewYear,inp.month(),inp.day());
     }
 }
