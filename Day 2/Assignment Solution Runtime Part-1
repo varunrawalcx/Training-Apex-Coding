@@ -1,0 +1,37 @@
+//COMMON LIST FOR ALL METHODS
+List<Integer> List_Of_Number=new List<Integer>{1,2,3,4,5,6,7,8,9,10};
+    
+//OBJECT CREATION
+Assignment2 assignobj=new Assignment2();
+
+//FOR METHOD 1
+System.debug('Sum of all - '+assignobj.TotalSum(List_Of_Number));
+
+//FOR METHOD 2
+Integer Number_Of_Row=4;
+assignobj.Star_Pattern(Number_Of_Row);
+
+//FOR METHOD 3
+List<integer> Even_Filtered_list=new List<Integer>();
+assignobj.Even_List(List_Of_Number,Even_Filtered_list);
+System.debug(Even_Filtered_list);
+
+//FOR METHOD 4
+Map<String,List<Integer>> Odd_Even_Filtered_Map= new Map<String,List<Integer>>();
+Odd_Even_Filtered_Map.put('Odd',new List<Integer>());
+Odd_Even_Filtered_Map.put('Even',new List<Integer>());
+System.debug(assignobj.Odd_Even_List(List_Of_Number,Odd_Even_Filtered_Map));
+
+//FOR METHOD 5
+if(assignobj.TotalSum_Is_Even_Odd(List_Of_Number)==True)
+{
+    System.debug('TotalSum is an Even no.');
+}
+else
+{
+    System.debug('TotalSum is an Odd no.');
+}
+
+//FOR METHOD 6
+Date DOB = Date.newInstance(2001, 3, 26);
+System.debug(assignobj.Coming_Birthday(DOB));
