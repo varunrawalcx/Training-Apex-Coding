@@ -1,0 +1,12 @@
+Polymorphism_Class_Assignment1 assignobj= new Polymorphism_Class_Assignment1();
+
+//Based on Returntype
+List<String> test1=new list<String>{'Hello','Varun','Rawal'};
+List<Integer> test2=new list<Integer>{1,2,3};
+System.debug(assignobj.TotalSum(test1));
+System.debug(assignobj.TotalSum(test2));
+
+//Based on No. of Parameter
+Integer num1=4;
+assignobj.Star_Pattern(num1);
+assignobj.Star_Pattern(num1 , num1);
