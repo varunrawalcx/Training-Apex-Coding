@@ -4,7 +4,7 @@ public class Assignment_3{
         OddEvenWrapper OddEvenObj=new OddEvenWrapper();
         OddEvenObj.EvenList=new List<Integer>();
         OddEvenObj.OddList=new List<Integer>();
-        if(InputList!=Null)
+        if(InputList.size()>0)
         {
             for(Integer i:InputList)
             {
