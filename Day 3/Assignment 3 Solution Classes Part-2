@@ -1,0 +1,16 @@
+public class Assignment_3
+{
+    public Boolean isLeapYear(Date InpDate)
+    {
+        if( (math.mod(InpDate.year(),4)==0 && math.mod(InpDate.year(),100)!=0 ) || math.mod(InpDate.year(),400)==0 )
+        {
+            return True;
+        }
+        else
+        {
+            return False;
+        }
+    }
+}
+
+
