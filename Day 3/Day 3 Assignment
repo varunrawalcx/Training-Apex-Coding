@@ -1,0 +1,6 @@
+* Create a method to give two different arrays: One for odd numbers and another of even numbers
+  Input: array [1, 2, 3, 4, 6, 7, 9]
+  Output: wrapper of two different list of numbers.
+
+* Find out the if the year is leap year in apex method where input is a date param. 
+  If the year is not a leap year than system should throw an user define exception.
