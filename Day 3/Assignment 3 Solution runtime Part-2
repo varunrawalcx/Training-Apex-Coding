@@ -1,0 +1,3 @@
+Assignment_3 Obj=new Assignment_3();
+Date InpDate = Date.newInstance(2024, 2, 17);
+System.debug('IS '+InpDate+' a Leap Year? '+Obj.isLeapYear(InpDate));
