@@ -1,0 +1,5 @@
+List<Integer> InputList=new List<Integer>{1,2,3,4,5,6,7,8,9,10};
+Assignment_3 Obj=new Assignment_3();
+Assignment_3.OddEvenWrapper result = Obj.OddEvenList(InputList);
+System.debug('Odd List:- '+result.OddList);
+System.debug('Even List:- '+result.EvenList);
