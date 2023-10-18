@@ -1,15 +1,27 @@
 public class Assignment_3
 {
-    public Boolean isLeapYear(Date InpDate)
+    public class NotaLeapYearException extends Exception 
     {
-        if( (math.mod(InpDate.year(),4)==0 && math.mod(InpDate.year(),100)!=0 ) || math.mod(InpDate.year(),400)==0 )
+        public void NotaLeapYear()
         {
-            return True;
+            system.debug('NOT A LEAP YEAR ERROR');
         }
-        else
+    }
+    public void isLeapYear(Date InpDate)
+    {
+        try
         {
-            return False;
+            if( (math.mod(InpDate.year(),4)==0 && math.mod(InpDate.year(),100)!=0 ) || math.mod(InpDate.year(),400)==0 )
+            {
+                System.debug('Leap Year');
+                return;
+            }
+            throw new NotaLeapYearException();
         }
+        catch(NotaLeapYearException e)
+        {
+            e.NotaLeapYear();
+        } 
     }
 }
 
