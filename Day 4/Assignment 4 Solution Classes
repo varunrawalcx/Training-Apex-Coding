@@ -1,0 +1,105 @@
+public class Assignment4 {
+    
+    public void ContactAfterInputDate(Date inpDate){
+        System.debug('Contact Names Which Created After '+inpDate);
+        List<Contact> ContactList=[SELECT Name FROM Contact WHERE CreatedDate>:inpDate];
+        if(ContactList.size()>0){
+            for(Contact name : ContactList){
+                System.debug(name.Name);
+            }
+        }
+        else{
+            System.debug('Contact is Empty');
+        }
+    }
+    
+    public void ContactAfterInputDate(Date inpDate,id AccId){
+        System.debug('Contact Names Which Created After '+inpDate+' and have Account Id:- '+AccId);
+        List<Contact> ContactList=[SELECT Name FROM Contact WHERE CreatedDate>:inpDate AND 	AccountId=:AccId];
+        if(ContactList.size()>0){
+            for(Contact name : ContactList){
+                System.debug(name.Name);
+            }
+        }
+        else{
+            System.debug('Contact is Empty');
+        }
+    }
+    public void FetchAccountContact(id AccId){
+        System.debug('Account and Contact Names that have Account Id:- '+AccId);
+        List<Account> AccountName=[SELECT Name, (SELECT Name FROM Contacts) FROM Account WHERE id=:AccId];
+        if(AccountName.size()>0){
+            for(Account Acc: AccountName){
+                System.debug('Account Name:- '+Acc.Name);
+                for(Contact con: Acc.Contacts){
+                    System.debug('Contact Name:- '+con.Name);
+                }
+            }
+        }
+        else{
+            System.debug('Empty');
+        }
+    }
+    public void FetchAccountContact(Date inpDate){
+        System.debug('Account and Contact Names Where Account Created Date is Greater than:- '+inpDate);
+        List<Account> AccountName=[SELECT Name, (SELECT Name FROM Contacts) FROM Account WHERE CreatedDate>:inpDate];
+        if(AccountName.size()>0){
+            for(Account Acc: AccountName){
+                System.debug('Account Name:- '+Acc.Name);
+                for(Contact con: Acc.Contacts){
+                    System.debug('Contact Name:- '+con.Name);
+                }
+            }
+        }
+        else{
+            System.debug('Empty');
+        }    
+    }
+    
+    public void ageGreaterthan18(){
+        System.debug('Students who are greater than 18 Years');
+        Date DateToday=Date.today();
+        Date new_date=DateToday.addYears(-18);
+        List<Student__c> Student=[SELECT Name FROM Student__c WHERE DOB__c<=:new_date];
+        if(Student.size()>0){
+            for(Student__c Students: Student)
+            {
+                System.debug(Students.Name);
+            }
+        }else{
+            System.debug('Empty');
+        }
+    }
+    
+    public void AccountContactifActive(id InpId){
+        List<Account> AccountList=[SELECT Name, (SELECT Name FROM Contacts) FROM Account WHERE id=:InpId AND Active__c='Yes'];
+        if(AccountList.size()>0){
+            for(Account Acc: AccountList){
+                System.debug('Account Name:- '+Acc.Name);
+                for(Contact con:Acc.Contacts)
+                {
+                    System.debug('Contact Name:- '+con.Name);
+                }
+            }
+        }else{
+            System.debug('Empty');
+        }
+    }
+    
+    public void AccountNum(){
+        List<List<SObject>> SOSLSearchlist=[FIND '1234567890' IN ALL FIELDS RETURNING Account(Name),Contact(Name)];
+        if(SOSLSearchlist.size()>0){
+            List<Account> AccountList=(List<Account>) SOSLSearchlist[0];
+            List<Contact> ContactList=(List<Contact>) SOSLSearchlist[1];
+            for (Account acc : AccountList) {
+                System.debug('Account Name with Phone No. 1234567890 :- ' + acc.Name);
+            }
+            
+            for (Contact con : ContactList) {
+                System.debug('Contact Name with Phone No. 1234567890 :- ' + con.Name);
+            }
+        }else{
+            System.debug('Empty');
+        }
+    }
+}
