@@ -1,0 +1,33 @@
+* Param: Date
+Return: List of Contact
+Fetch the contacts which are created after the input date
+
+* Param: Date, Account Id
+Return: List of Contact
+Fetch the contacts which are created after the input date with the
+same account id
+
+* Param: Accountid
+Return: List of Accounts and contacts
+Fetch the accounts & contacts on single query
+
+* Param: Date
+Return: List of Contact
+Fetch the contacts along with account name whose account created date is greated than the inputted date
+
+* Create custom object School & Student. Student has a MD relationship of the school. Create a date field on student named 'Date of Birth'
+Param: void
+Return: List of Student
+Fetch the student whose age is greater than 18 years. (without
+creating any additional field)
+
+* Create an isActive checkbox on the student.
+Param: accountid
+Return: List of contact
+Fetch the contacts along with account name whose account is
+active.
+Fetch all the contacts and accounts whose phone number is '1234567890' through SOSL query.
+
+* Param: boolean isActive, Id accountid, date specificDate, boolean includeActiveCheck, boolean include AccountCheck, boolean checkSpecificDate
+Return: List of contact
+Fetch the contacts along with the mentioned parameter, if includeActiveCheck value is true then fetch the contact where isActive = true and same for others. Use dynamic SOQL query on the method.
