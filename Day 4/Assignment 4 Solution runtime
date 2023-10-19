@@ -1,0 +1,11 @@
+Assignment4 Obj=new Assignment4();
+Date test1=Date.NewInstance(2023,9,16);
+Obj.ContactAfterInputDate(test1);
+Date test2=Date.NewInstance(2023,10,5);
+Obj.ContactAfterInputDate(test2,'0015j00001CTf2YAAT');
+Obj.FetchAccountContact('0015j00001CTf2YAAT');
+Date test3=Date.NewInstance(2023,10,1);
+Obj.FetchAccountContact(test3);
+Obj.ageGreaterthan18();
+Obj.AccountContactifActive('0015j00001CTf2YAAT');
+Obj.AccountNum();
