@@ -1,0 +1,71 @@
+public class TestAssignment{
+    public List<String> InsertAtFirst(String CityName,List<String> CityNames){
+        CityNames.add(CityName);
+        String PseudoCity=CityNames[CityNames.size()-1];
+        for(Integer i=CityNames.size()-1;i>0;i--){
+            CityNames[i]=CityNames[i-1];
+        }
+        CityNames[0]=PseudoCity;
+        return CityNames;
+    }
+    public Map<String,Decimal> IndustrySummary(List<Account> AllAccount){
+        Decimal BankingValue=0;
+        Decimal RetailValue=0;
+        Decimal OtherValue=0;
+        Map<String,Decimal> IndustryMap=new Map<String,Decimal>();
+        if(AllAccount!=null){
+            for(Account Acc: AllAccount){
+                if(Acc.Industry!=null && Acc.AnnualRevenue!=null){
+                    if(Acc.Industry =='Banking'){
+                        BankingValue+=Acc.AnnualRevenue;	
+                    }else if(Acc.Industry=='Retail'){
+                        RetailValue+=Acc.AnnualRevenue;
+                    }else{
+                        OtherValue+=Acc.AnnualRevenue;
+                    }
+                }
+            }
+        }
+        IndustryMap.put('Banking',BankingValue);
+        IndustryMap.put('Retail',RetailValue);
+        IndustryMap.put('Others',OtherValue);
+        return IndustryMap;
+    }
+    
+    public Map<String,String> PhoneToAccount(List<Account> AllAccount){
+        Map<String,String> ResultMap=new Map<String,String>();
+        if(AllAccount!=null){
+            for(Account Acc:AllAccount){
+                if(Acc.Phone!=null){
+                    ResultMap.put(Acc.Phone,Acc.Name);   
+                }
+            }
+        }
+        return ResultMap; 
+    }
+    
+    public Map<String,List<Case>> CaseByType(List<Case> AllCase){
+        Map<String,List<Case>> ResultMap =new Map<String,List<Case>>();
+        ResultMap.put('Electrical',new List<Case>());
+        ResultMap.put('Structural',new List<Case>());
+        ResultMap.put('Others',new List<Case>());
+        if(Allcase.size()>0){
+            for(Case Cs : AllCase){
+                if(Cs.Type==NULL){
+                    continue;
+                }
+                if(Cs.Type!=null){
+                    if(Cs.Type=='Electrical'){
+                        ResultMap.get('Electrical').add(Cs);
+                    }else if(Cs.Type=='Structural'){
+                        ResultMap.get('Structural').add(Cs);
+                    }else{
+                        ResultMap.get('Others').add(Cs);
+                    }
+                }
+            }
+        }
+        return ResultMap;
+    }
+    
+}
