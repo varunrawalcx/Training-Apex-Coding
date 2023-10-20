@@ -1,4 +1,4 @@
-public class Assignment4 {
+public class Assignment4{
     
     public void ContactAfterInputDate(Date inpDate){
         System.debug('Contact Names Which Created After '+inpDate);
@@ -102,4 +102,39 @@ public class Assignment4 {
             System.debug('Empty');
         }
     }
+    
+    public void DynamicAccount(Boolean isActive, Id AccId, Date DOB, Boolean IsActiveCheck, Boolean IsAccIdCheck, Boolean IsDOBCheck) {
+    String Dquery = 'SELECT Name FROM Account ';
+    Boolean WhereTrue = false;
+    
+    if (IsActiveCheck) {
+        Dquery += 'WHERE IsActive__c = true ';
+        WhereTrue = true;
+    }
+    
+    if (IsAccIdCheck) {
+        if (WhereTrue) {
+            Dquery += 'AND Id = :AccId ';
+        } else {
+            Dquery += 'WHERE Id = :AccId ';
+            WhereTrue = true;
+        }
+    }
+    
+    if (IsDOBCheck) {
+        if (WhereTrue) {
+            Dquery += 'AND DOB__c = :DOB ';
+        } else {
+            Dquery += 'WHERE DOB__c = :DOB ';
+            WhereTrue = true;
+        }
+    }
+    
+    System.debug(Dquery);
+    List<Account> Acclist = Database.query(Dquery);
+    
+    for (Account Acc : Acclist) {
+        System.debug('Account Name: ' + Acc.Name);
+    }
+}
 }
