@@ -9,3 +9,5 @@ Obj.FetchAccountContact(test3);
 Obj.ageGreaterthan18();
 Obj.AccountContactifActive('0015j00001CTf2YAAT');
 Obj.AccountNum();
+Date test4=Date.NewInstance(2005,10,19);
+Obj.DynamicAccount(True,'0015j00001CTf2YAAT',test4,True,False,True);
