@@ -1,140 +1,115 @@
-public class Assignment4{
+public class TestAssignment{
     
-    public void ContactAfterInputDate(Date inpDate){
-        System.debug('Contact Names Which Created After '+inpDate);
-        List<Contact> ContactList=[SELECT Name FROM Contact WHERE CreatedDate>:inpDate];
-        if(ContactList.size()>0){
-            for(Contact name : ContactList){
-                System.debug(name.Name);
+    //Question 1
+    public String EmailtoName(String Email){
+        String FirstName='';
+        String LastName='';
+        Boolean isDot=False;
+        Boolean isAt=False;
+        Integer i=0;
+        while(!isDot){
+            if(Email.substring(i,i+1)!='.'){
+                FirstName+=Email.substring(i,i+1);
+            }else{
+                isDot=True;           
             }
+            i+=1;
         }
-        else{
-            System.debug('Contact is Empty');
+        while(!isAt){
+            if(Email.substring(i,i+1)!='@'){
+                LastName+=Email.substring(i,i+1);
+            }else{
+                isAt=True;
+            }
+            i+=1;
         }
+        String Name=FirstName+' '+LastName;
+        return Name;
     }
     
-    public void ContactAfterInputDate(Date inpDate,id AccId){
-        System.debug('Contact Names Which Created After '+inpDate+' and have Account Id:- '+AccId);
-        List<Contact> ContactList=[SELECT Name FROM Contact WHERE CreatedDate>:inpDate AND 	AccountId=:AccId];
-        if(ContactList.size()>0){
-            for(Contact name : ContactList){
-                System.debug(name.Name);
+    //Question 2
+    public List<String> InsertAtFirst(String CityName,List<String> CityNames){
+        CityNames.add(CityName);
+        String PseudoCity=CityNames[CityNames.size()-1];
+        for(Integer i=CityNames.size()-1;i>0;i--){
+            CityNames[i]=CityNames[i-1];
+        }
+        CityNames[0]=PseudoCity;
+        return CityNames;
+    }
+    
+    //Question 3
+    public List<String> AdjectivetoAnimal(List<String>Adjective,List<String> Animal){
+        List<String> ResultString=new List<String>();
+        for(String Aj:Adjective){
+            for(String An:Animal){
+                ResultString.add(Aj+'-'+An);
             }
         }
-        else{
-            System.debug('Contact is Empty');
-        }
+        return ResultString;
     }
-    public void FetchAccountContact(id AccId){
-        System.debug('Account and Contact Names that have Account Id:- '+AccId);
-        List<Account> AccountName=[SELECT Name, (SELECT Name FROM Contacts) FROM Account WHERE id=:AccId];
-        if(AccountName.size()>0){
-            for(Account Acc: AccountName){
-                System.debug('Account Name:- '+Acc.Name);
-                for(Contact con: Acc.Contacts){
-                    System.debug('Contact Name:- '+con.Name);
+    
+    //Question 4
+    public Map<String,Decimal> IndustrySummary(List<Account> AllAccount){
+        Decimal BankingValue=0;
+        Decimal RetailValue=0;
+        Decimal OtherValue=0;
+        Map<String,Decimal> IndustryMap=new Map<String,Decimal>();
+        if(AllAccount!=null){
+            for(Account Acc: AllAccount){
+                if(Acc.Industry!=null && Acc.AnnualRevenue!=null){
+                    if(Acc.Industry =='Banking'){
+                        BankingValue+=Acc.AnnualRevenue;	
+                    }else if(Acc.Industry=='Retail'){
+                        RetailValue+=Acc.AnnualRevenue;
+                    }else{
+                        OtherValue+=Acc.AnnualRevenue;
+                    }
                 }
             }
         }
-        else{
-            System.debug('Empty');
-        }
+        IndustryMap.put('Banking',BankingValue);
+        IndustryMap.put('Retail',RetailValue);
+        IndustryMap.put('Others',OtherValue);
+        return IndustryMap;
     }
-    public void FetchAccountContact(Date inpDate){
-        System.debug('Account and Contact Names Where Account Created Date is Greater than:- '+inpDate);
-        List<Account> AccountName=[SELECT Name, (SELECT Name FROM Contacts) FROM Account WHERE CreatedDate>:inpDate];
-        if(AccountName.size()>0){
-            for(Account Acc: AccountName){
-                System.debug('Account Name:- '+Acc.Name);
-                for(Contact con: Acc.Contacts){
-                    System.debug('Contact Name:- '+con.Name);
+    
+    //Question 5
+    public Map<String,String> PhoneToAccount(List<Account> AllAccount){
+        Map<String,String> ResultMap=new Map<String,String>();
+        if(AllAccount!=null){
+            for(Account Acc:AllAccount){
+                if(Acc.Phone!=null){
+                    ResultMap.put(Acc.Phone,Acc.Name);   
                 }
             }
         }
-        else{
-            System.debug('Empty');
-        }    
+        return ResultMap; 
     }
     
-    public void ageGreaterthan18(){
-        System.debug('Students who are greater than 18 Years');
-        Date DateToday=Date.today();
-        Date new_date=DateToday.addYears(-18);
-        List<Student__c> Student=[SELECT Name FROM Student__c WHERE DOB__c<=:new_date];
-        if(Student.size()>0){
-            for(Student__c Students: Student)
-            {
-                System.debug(Students.Name);
-            }
-        }else{
-            System.debug('Empty');
-        }
-    }
-    
-    public void AccountContactifActive(id InpId){
-        List<Account> AccountList=[SELECT Name, (SELECT Name FROM Contacts) FROM Account WHERE id=:InpId AND Active__c='Yes'];
-        if(AccountList.size()>0){
-            for(Account Acc: AccountList){
-                System.debug('Account Name:- '+Acc.Name);
-                for(Contact con:Acc.Contacts)
-                {
-                    System.debug('Contact Name:- '+con.Name);
+    //Question 6
+    public Map<String,List<Case>> CaseByType(List<Case> AllCase){
+        Map<String,List<Case>> ResultMap =new Map<String,List<Case>>();
+        ResultMap.put('Electrical',new List<Case>());
+        ResultMap.put('Structural',new List<Case>());
+        ResultMap.put('Others',new List<Case>());
+        if(Allcase.size()>0){
+            for(Case Cs : AllCase){
+                if(Cs.Type==NULL){
+                    continue;
+                }
+                if(Cs.Type!=null){
+                    if(Cs.Type=='Electrical'){
+                        ResultMap.get('Electrical').add(Cs);
+                    }else if(Cs.Type=='Structural'){
+                        ResultMap.get('Structural').add(Cs);
+                    }else{
+                        ResultMap.get('Others').add(Cs);
+                    }
                 }
             }
-        }else{
-            System.debug('Empty');
         }
+        return ResultMap;
     }
     
-    public void AccountNum(){
-        List<List<SObject>> SOSLSearchlist=[FIND '1234567890' IN ALL FIELDS RETURNING Account(Name),Contact(Name)];
-        if(SOSLSearchlist.size()>0){
-            List<Account> AccountList=(List<Account>) SOSLSearchlist[0];
-            List<Contact> ContactList=(List<Contact>) SOSLSearchlist[1];
-            for (Account acc : AccountList) {
-                System.debug('Account Name with Phone No. 1234567890 :- ' + acc.Name);
-            }
-            
-            for (Contact con : ContactList) {
-                System.debug('Contact Name with Phone No. 1234567890 :- ' + con.Name);
-            }
-        }else{
-            System.debug('Empty');
-        }
-    }
-    
-    public void DynamicAccount(Boolean isActive, Id AccId, Date DOB, Boolean IsActiveCheck, Boolean IsAccIdCheck, Boolean IsDOBCheck) {
-    String Dquery = 'SELECT Name FROM Account ';
-    Boolean WhereTrue = false;
-    
-    if (IsActiveCheck) {
-        Dquery += 'WHERE IsActive__c = true ';
-        WhereTrue = true;
-    }
-    
-    if (IsAccIdCheck) {
-        if (WhereTrue) {
-            Dquery += 'AND Id = :AccId ';
-        } else {
-            Dquery += 'WHERE Id = :AccId ';
-            WhereTrue = true;
-        }
-    }
-    
-    if (IsDOBCheck) {
-        if (WhereTrue) {
-            Dquery += 'AND DOB__c = :DOB ';
-        } else {
-            Dquery += 'WHERE DOB__c = :DOB ';
-            WhereTrue = true;
-        }
-    }
-    
-    System.debug(Dquery);
-    List<Account> Acclist = Database.query(Dquery);
-    
-    for (Account Acc : Acclist) {
-        System.debug('Account Name: ' + Acc.Name);
-    }
-}
 }
