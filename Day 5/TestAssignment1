@@ -1,0 +1,80 @@
+1.Implement a function nameFromEmail that takes as input a valid email address in the format firstname.lastname@example.com. The function should extract the first name and last name from this email address and return a capitalized full name (i.e. Firstname Lastname). Assume that the input will always be a valid email address with both the first name and last name separated by a period (.).
+
+ 
+
+2.
+Implement a method that would take an element and a List of elements as arguments and return the same List with the element inserted at the 0th position.
+For example, executing the snippet below:
+List<String> cities = new List<String> {
+  'Seattle',
+  'Cairo',
+  'London'
+};
+insertAtStart('Mumbai', cities);
+should modify cities to have the following 4 values: ['Mumbai', 'Seattle', 'Cairo', 'London']
+You are required to modify the list that is passed. Try doing so without creating any extra lists, which would mean an O(1) space complexity.
+
+ 
+
+ 
+
+3. Some Salesforce orgs (Trailhead playground orgs, for example) are given random names that include a combination of an adjective and an animal as a prefix. For instance, cunning-impala, curious-raccoon, and brave-hawk are possible prefixes for names for such orgs.
+Implement the method generateOrgNames that takes as input two lists of strings adjectives and animals, and returns a list of strings containing all org name prefixes that can be formed by combining the adjectives and animals. Assume that the input lists will never be empty
+Given the following test code:
+List<String> adjectives = new List<String> {'cunning', 'brave'};
+List<String> animals = new List<String> {'wolf', 'bear'};
+List<String> result = orgNames(adjectives, animals);
+The list result contains the strings 'cunning-wolf', 'cunning-bear', 'brave-wolf', and 'brave-bear'.
+
+ 
+
+ 
+
+4. The method industrySummary takes as input a list of accounts with Industry and AnnualRevenue fields populated. The method should sum up annual revenue by each industry and return a Map with each industry as a key, and sum of annual revenue for that industry as the value.
+For example, given the following accounts:
+a1
+Name: 'Acme Enterprises'
+Industry: 'Banking'
+AnnualRevenue: 550,000
+a2
+Name: 'Universal Containers'
+Industry: 'Retail'
+AnnualRevenue: 200,000
+a3
+Name: 'SForce Capital'
+Industry: 'Banking'
+AnnualRevenue: 450,000
+The method call industrySummary(new List {a1, a2, a3}) should return a map containing the following key/value pairs:
+'Retail' -> 200,000
+'Banking' -> 1,000,000
+
+ 
+
+5. Implement the method phoneToAccount that takes as input a list of Accounts, and returns a Map containing the phone number as a key and the Account record as the value. Do not include accounts without a phone number.
+For example, given the following accounts:
+a1 - 
+Name: 'Acme Enterprises'
+Phone: '2143452398'
+a2 - 
+Name: 'Universal Containers'
+Phone: '6923849837'
+The method call phoneToAccount(new List {a1, a2}) should return a map containing the following key/value pairs:
+'2143452398' -> a1
+'6923849837' -> a2
+
+ 
+
+6. The method casesByType takes as input a list of cases and returns a Map> with case types (Type field on Case) as the keys, and a list of cases of that type as values. This map should not include cases with no Type specified.
+For example, given the following cases:
+c1
+Subject: 'Power does not come on'
+Type: 'Electrical'
+c2
+Subject: 'Several switches not responding'
+Type: 'Electrical'
+c3
+Subject: 'Lever jammed - cannot run machine'
+Type: 'Structural'
+The method call casesByType(new List {c1, c2, c3}) should return a map containing the following key/value pairs:
+'Electrical' -> { c1, c2 }
+'Structural' -> { c3 }
