@@ -1,0 +1,24 @@
+TestAssignment obj=new TestAssignment();
+List<String> cities = new List<String> {
+  'Seattle',
+  'Cairo',
+  'London'
+};
+System.debug(obj.InsertAtFirst('Mumbai',cities));
+System.debug(obj.InsertAtFirst('Noida',cities));
+
+
+List<Account> AllAccount=[SELECT Name, Industry, AnnualRevenue FROM Account];
+System.debug(obj.IndustrySummary(AllAccount));
+
+List<Account> AllAccount1=[SELECT Name, Phone FROM Account];
+for (String phone : obj.PhoneToAccount(AllAccount1).keySet()) {
+    String accountName = obj.PhoneToAccount(AllAccount1).get(phone);
+    System.debug('Phone: ' + phone + ', Account Name: ' + accountName);
+}
+
+List<Case> AllCases=[SELECT Type FROM Case];
+for (String CType : obj.CaseByType(AllCases).keySet()) {
+    List<Case> CaseName = obj.CaseByType(AllCases).get(CType);
+    System.debug('Case Type: ' + CType + ', Case : ' + CaseName);
+}
