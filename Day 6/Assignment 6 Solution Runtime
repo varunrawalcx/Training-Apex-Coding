@@ -1,0 +1,5 @@
+Assignment6 AssignObj=new Assignment6();
+AssignObj.MultipleContact('0015j000019uFoSAAU',5);
+AssignObj.IsActiveAccount();
+AssignObj.ActiveInActiveContact();
+Assignobj.ActiveandCreatedDate();
