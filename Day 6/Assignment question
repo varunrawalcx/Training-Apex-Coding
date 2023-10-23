@@ -1,0 +1,15 @@
+* Create a method to insert multiple contact record for a specific account.
+    Param: Id accountId, Integer noOfContacts
+    Return: Void
+  insert the contacts w.r.t. the noOfContacts specified on the method.
+
+* Create a boolean field isActive on the accounts. Create contacts for all the accounts whose isActive value is false and if created then update the isActive value to true.
+  
+* Create number fields on account:
+     a. Total number of contacts
+     b. Total number of Active contacts
+     c. Total number of Inactive Contacts.
+
+* Create a method to update the same for all the accounts.
+
+* Write a method to delete all the contacts whose are inactive (contact.isActive = false) and the contacts are created for more than 1 year
