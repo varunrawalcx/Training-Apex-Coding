@@ -1,0 +1,62 @@
+public class Assignment6 {
+    //Method 1
+    public void MultipleContact(Id AccId, Integer NoofContact){
+        List<Contact> ContactList=new List<Contact>();
+        for(Integer i=0;i<NoofContact;i++){
+            Contact con=new Contact();
+            con.LastName='Contact'+i;
+            con.AccountId=AccId;
+            ContactList.add(con);
+        }
+        Insert ContactList;
+    }
+    //Method 2
+    public void IsActiveAccount(){
+        List<Account> AccountList=[SELECT Id,(SELECT Id FROM Contacts) FROM Account WHERE IsActive__c=False];
+        Integer i=0;
+        List<Contact> ContactList=new List<Contact>();
+        for(Account Acc: AccountList){
+            if(Acc.Contacts.size()==0){
+                Contact con=new Contact(LastName='C'+i,AccountId=Acc.Id);
+                i+=1;
+                ContactList.add(con);
+            }
+            Acc.IsActive__c=True;
+        }
+        insert ContactList;
+        update AccountList;
+    }
+    //Method 3
+    public void ActiveInActiveContact(){
+        List<Account> AccountList=[SELECT Id, No_of_Active_Contacts__c,No_of_Contacts__c,No_of_InActive_Contacts__c,(SELECT Id,IsActive__c,AccountId FROM Contacts) FROM Account];
+        List<Account> UpdatedAccount=new List<Account>();
+        for(Account Acc:AccountList){
+            Integer NumofContact=0;
+            Integer NumofActive=0;
+            for(Contact con: Acc.Contacts){
+                if(con.AccountId==Acc.Id ){
+                    if(con.IsActive__c){
+                        NumofActive+=1;
+                    }
+                    NumofContact+=1;
+                }
+            }
+            Acc.No_of_Active_Contacts__c=NumofActive;
+            Acc.No_of_Contacts__c=NumofContact;
+            Acc.No_of_InActive_Contacts__c=NumofContact-NumofActive;
+            UpdatedAccount.add(Acc);
+        }
+        update UpdatedAccount;
+    }
+    //Method 4
+    public void ActiveandCreatedDate(){
+        List<Contact> ContactList=[SELECT Id,IsActive__c,CreatedDate FROM Contact];
+        List<Contact> DeletedContact=new List<Contact>();
+        for(Contact con:ContactList){
+            if(!con.IsActive__c && con.CreatedDate.day()-Date.Today().day()==0){
+                DeletedContact.add(con);
+            }
+        }
+        delete deletedContact;
+    }
+}
