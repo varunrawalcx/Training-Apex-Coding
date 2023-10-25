@@ -74,3 +74,23 @@ trigger TestTrigger2 on Case (after insert, after delete) {
         }
     }
 }
+
+
+//Question 9
+trigger AssignmentTrigger on Opportunity (after insert, after update, after delete) {
+    
+        if(Trigger.isAfter){
+            TriggerHandler.OpportunityTotalRevenue(Trigger.new);
+        }
+    }
+    if(Trigger.isupdate){
+        if(Trigger.isAfter){
+            TriggerHandler.OpportunityTotalRevenue(Trigger.new);
+        }
+    }
+    if(Trigger.isdelete){
+        if(Trigger.isAfter){
+            TriggerHandler.OpportunityTotalRevenue(Trigger.old);
+        }
+    }
+}
