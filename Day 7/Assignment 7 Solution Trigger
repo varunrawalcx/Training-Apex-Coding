@@ -1,0 +1,7 @@
+trigger AssignmentTrigger on Opportunity (before insert) {
+    if(Trigger.isinsert){
+        if(Trigger.isBefore){
+            TriggerHandler.OpportunityAmount(Trigger.new);
+        }
+    }
+}
