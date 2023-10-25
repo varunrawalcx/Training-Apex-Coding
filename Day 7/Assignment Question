@@ -1,0 +1,23 @@
+1. Upon Opportunity Creation if Amount is not null and is greater than 100000 then populate ‘Hot Opportunity’ in description field.
+
+2. Upon Creation & Updation of Position (Custom Object) if it is a New Position and Open Date, Min Pay & Max Pay are not populated then populated them with random values:
+
+3. When a Case is created on any Account, put the latest case number on the Account in the ‘Latest Case Number’ field.
+
+4. Account records should have a field named ‘Recent Opportunity Amount’. It should contain the opportunity amount of the latest created opportunity on account
+
+5. If the Account phone is updated then populate the phone number on all related Contacts.
+
+6. Prevent account record from being edited if the record is created 7 days back.
+
+7. When the Employee (Custom Object) record is inserted and updated then update ‘Present Employee Count’ on related Account.
+
+8. Create two record types named as “Partner Case” and “Customer Case” on Case Object. On creation and updation of Case, as per the record type populate the total number of Partner Case (custom field on account) or Customer Case (custom field on account) on Account object.
+
+9. When any Opportunity is created with amount populated or Opportunity Amount is updated then populate total Amount on Account Level for all related opportunities in Annual Revenue Field.
+
+10. If the owner of an account is changed then the owner for the related contacts should also be updated.
+
+11. Whenever a new User having profile “System Administrator” is inserted and is Active, add the user to the public group “Admins”. Create a public group named Admins.
+
+12. Trigger on contact to prevent duplicate records based on Contact Email.
