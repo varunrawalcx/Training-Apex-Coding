@@ -59,3 +59,18 @@ trigger TestTrigger4 on Employee__c (After insert, after delete) {
         }
     }
 }
+
+
+//Question 8
+trigger TestTrigger2 on Case (after insert, after delete) {
+    if(Trigger.isinsert){
+        if(Trigger.isAfter){
+            TriggerHandler.AccountPartnerCustomerCase(Trigger.new);
+        }
+    }
+    if(Trigger.isdelete){
+        if(Trigger.isAfter){
+            TriggerHandler.AccountPartnerCustomerCase(Trigger.old);
+        }
+    }
+}
