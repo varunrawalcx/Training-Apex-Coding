@@ -1,1 +1,163 @@
-
+public class TriggerHandler {
+    public static void OpportunityAmount(List<Opportunity> OppList){
+        for(Opportunity opp : OppList){
+            if(opp.Amount>100000){
+                opp.Description='Hot Opportunity';
+            }
+        }
+    }
+    public static void PositionsValues(List<Position__c> posList){
+        for(Position__c pos : posList){
+            if(pos.Position_Type__c=='New Position'){
+                if(pos.Open_Date__c==null){
+                    pos.Open_Date__c=Date.Today();
+                }
+                if(pos.Max_Pay__c==null){
+                    pos.Max_Pay__c=100000;
+                }
+                if(pos.Min_Pay__c==null){
+                    pos.Min_Pay__c=5000;
+                }
+            }
+        }
+    }
+    public static void CasetoAccount(List<Case> CaseList){
+        List<Account> AccList=new List<Account>();
+        for(Case cas : CaseList){
+            if(cas.AccountId!=null){
+                Account Acc=new Account();
+                Acc.Id=cas.AccountId;
+                Acc.Latest_Case_Number__c=cas.CaseNumber;
+                AccList.add(Acc);
+            }
+        }
+        if(AccList!=null){ 
+            update AccList;
+        }
+    }
+    public static void OpportunitytoAccount(List<Opportunity> OppList){
+        List<Account> AccList=new List<Account>();
+        for(Opportunity Opp : OppList){
+            if(Opp.AccountId!=null){
+                Account Acc=new Account();
+                Acc.Id=Opp.AccountId;
+                Acc.Recent_opportunity_Amount__c=Opp.Amount;
+                AccList.add(Acc);
+            }
+        }
+        if(AccList!=null){ 
+            update AccList;
+        }
+    }
+    public static void AccounttoContact(List<Account> AccList){
+        List<Contact> UpdatedContact=new List<Contact>();
+        List<id> AccIds=new List<id>();
+        for(Account Acc : AccList){
+            AccIds.add(Acc.Id);
+        }
+        List<Contact> ConList=[select id, AccountId, Phone from Contact where AccountId in :AccIds];
+        for(Account Acc:AccList){
+            for(Contact Con:ConList){
+                if(Acc.id==con.AccountId){
+                    Con.Phone=Acc.Phone;
+                }
+                UpdatedContact.add(Con);
+            }
+        }
+        if(UpdatedContact!=null){ 
+            update UpdatedContact;
+        }
+    }
+    public static void AccountNotUpdate(List<Account> AccList){
+        for(Account Acc:AccList){
+            Date AccDate=Acc.CreatedDate.date();
+            Integer Days=AccDate.daysBetween(Date.Today());
+            if(Days<=7){
+                Acc.adderror('Can\'t Update The Record Within 7 days of Creation!!!');
+            }
+        }
+    }
+    public static void AccountEmployeeCount(List<Employee__c> EmpList){
+        set<id> EmpIds=new set<id>();
+        for(Employee__c ids : EmpList){
+            Empids.add(ids.Account__c);
+        }
+        List<Account> UpdatedList=new List<Account>();
+        List<Account> AccList=[select id, NumberOfEmployees from Account where id in :EmpIds];
+        List<Employee__c> EmpList1=[select id,Account__c from Employee__c];
+        for(Account Acc:AccList){
+            Double i=0;
+            for(Employee__c emp: EmpList1){
+                if(emp.Account__c==Acc.id){
+                    i+=1;
+                }
+            }
+            Acc.Present_Employee_Count__c=i;
+            UpdatedList.add(Acc);
+        }
+        if(UpdatedList!=null){ 
+            update UpdatedList;
+        }
+    }
+    public static void AccountPartnerCustomerCase(List<Case> CaseList){
+        set<id> CaseIds=new set<id>();
+        for(Case ids : CaseList){
+            Caseids.add(ids.AccountId);
+        }
+        List<Account> UpdatedList=new List<Account>();
+        List<Account> AccList=[select id, Number_of_Customer_Case__c, Number_of_Partner_Case__c from Account where id in :CaseIds];
+        List<Case> CasList1=[select id,RecordTypeId,AccountId from Case];
+        for(Account Acc:AccList){
+            Integer Cust=0;
+            Integer part=0;
+            for(Case cas: CasList1){
+                if(cas.AccountId==Acc.id){
+                    if(cas.RecordTypeId=='0125j000000W27bAAC'){
+                        Cust+=1;
+                    }
+                    if(cas.RecordTypeId=='0125j000000W27WAAS'){
+                        Part+=1;
+                    }
+                }
+            }
+            Acc.Number_of_Customer_Case__c=Cust;
+            Acc.Number_of_Partner_Case__c=Part;
+            UpdatedList.add(Acc);
+        }
+        if(UpdatedList!=null){ 
+            update UpdatedList;
+        }
+    }
+    public static void OpportunityTotalRevenue(List<Opportunity> OppList){
+        set<id> AccIds=new set<id>();
+        for(Opportunity Opp : OppList){
+            AccIds.add(Opp.AccountId);
+        }
+        List<Account> UpdatedList=new List<Account>();
+        List<Account> AccList=[select id from Account where id in :AccIds];
+        List<Opportunity> OppList1=[select Amount, AccountId from Opportunity];
+        for(Account Acc : AccList){
+            decimal PseudoAmount=0;
+            for(Opportunity opp : OppList1){
+                if(Opp.AccountId==Acc.Id){
+                    PseudoAmount+=opp.Amount;
+                }
+            }
+            Acc.AnnualRevenue=PseudoAmount;
+            UpdatedList.add(Acc);
+        }
+        if(UpdatedList!=null){ 
+            update UpdatedList;
+        }
+    }
+    public static void ContactDuplicate(List<Contact> ConList){
+        List<Contact> ConList1=[select id, Email from Contact];
+        for(Contact con:ConList){
+            for(Contact con1:ConList1){
+                if(con.Email==Con1.Email && con.Id!=con1.Id){
+                    con.adderror('Duplicate Email Found!!!');
+                }
+            }
+        }
+    }
+}
