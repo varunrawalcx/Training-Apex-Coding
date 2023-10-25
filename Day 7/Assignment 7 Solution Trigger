@@ -14,3 +14,12 @@ trigger TestTrigger1 on Position__c (before insert,before update) {
         }
     }
 }
+
+
+trigger TestTrigger2 on Case (after insert) {
+    if(Trigger.isinsert){
+        if(Trigger.isAfter){
+            TriggerHandler.CasetoAccount(Trigger.new);
+        }
+    }
+}
