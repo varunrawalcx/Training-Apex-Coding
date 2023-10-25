@@ -45,11 +45,17 @@ trigger TestTrigger3 on Account (After update, Before update) {
     }
 }
 
-trigger TestTrigger4 on Employee__c (After insert) {
+
+//Question 7
+trigger TestTrigger4 on Employee__c (After insert, after delete) {
     if(Trigger.isinsert){
         if(Trigger.isAfter){
-            //Question 7
             TriggerHandler.AccountEmployeeCount(Trigger.new);
+        }
+    }
+    if(Trigger.isdelete){
+        if(Trigger.isAfter){
+            TriggerHandler.AccountEmployeeCount(Trigger.old);
         }
     }
 }
