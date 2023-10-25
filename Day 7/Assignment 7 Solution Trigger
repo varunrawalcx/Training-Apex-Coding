@@ -94,3 +94,13 @@ trigger AssignmentTrigger on Opportunity (after insert, after update, after dele
         }
     }
 }
+
+
+//Question 12
+trigger TestTrigger5 on Contact (before insert) {
+    if(Trigger.isinsert || Trigger.isupdate){
+        if(Trigger.isBefore){
+            TriggerHandler.ContactDuplicate(Trigger.new);
+        }
+    }
+}
