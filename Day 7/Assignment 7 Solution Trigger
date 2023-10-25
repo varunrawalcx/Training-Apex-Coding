@@ -1,7 +1,12 @@
-trigger AssignmentTrigger on Opportunity (before insert) {
+trigger AssignmentTrigger on Opportunity (before insert,after insert) {
     if(Trigger.isinsert){
         if(Trigger.isBefore){
+            //Question 1
             TriggerHandler.OpportunityAmount(Trigger.new);
+        }
+        if(Trigger.isAfter){
+            //Question 4
+            TriggerHandler.OpportunitytoAccount(Trigger.new);
         }
     }
 }
@@ -10,6 +15,7 @@ trigger AssignmentTrigger on Opportunity (before insert) {
 trigger TestTrigger1 on Position__c (before insert,before update) {
     if(Trigger.isinsert || Trigger.isupdate){
         if(Trigger.isBefore){
+            //Question 2
             TriggerHandler.PositionsValues(Trigger.new);
         }
     }
@@ -19,6 +25,7 @@ trigger TestTrigger1 on Position__c (before insert,before update) {
 trigger TestTrigger2 on Case (after insert) {
     if(Trigger.isinsert){
         if(Trigger.isAfter){
+            //Question 3
             TriggerHandler.CasetoAccount(Trigger.new);
         }
     }
