@@ -30,3 +30,17 @@ trigger TestTrigger2 on Case (after insert) {
         }
     }
 }
+
+
+trigger TestTrigger3 on Account (After update, Before update) {
+    if(Trigger.isupdate){
+        //Question 5
+        if(Trigger.isAfter){
+            TriggerHandler.AccounttoContact(Trigger.new);
+        }
+        //Question 6
+        if(Trigger.isBefore){
+            TriggerHandler.AccountNotUpdate(Trigger.new);
+        }
+    }
+}
