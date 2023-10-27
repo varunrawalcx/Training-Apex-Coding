@@ -28,3 +28,7 @@
     “Admins”. Create a public group named Admins.
 
 12. Trigger on contact to prevent duplicate records based on Contact Email.
+
+13. When ever a create opportunity object record updated total Opportunities and total amount in account object.
+
+14. Prevent Account from deleting if it has 2 or more contacts.
