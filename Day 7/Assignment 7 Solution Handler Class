@@ -1,14 +1,16 @@
 public class TriggerHandler {
     public static void OpportunityAmount(List<Opportunity> OppList){
-        for(Opportunity opp : OppList){
-            if(opp.Amount>100000){
-                opp.Description='Hot Opportunity';
+        if(OppList!=null){
+            for(Opportunity opp : OppList){
+                if(opp.Amount!=null && opp.Amount>100000){
+                    opp.Description='Hot Opportunity';
+                }
             }
         }
     }
     public static void PositionsValues(List<Position__c> posList){
-        for(Position__c pos : posList){
-            if(pos.Position_Type__c=='New Position'){
+        if(posList!=null){
+            for(Position__c pos : posList){
                 if(pos.Open_Date__c==null){
                     pos.Open_Date__c=Date.Today();
                 }
@@ -22,50 +24,52 @@ public class TriggerHandler {
         }
     }
     public static void CasetoAccount(List<Case> CaseList){
-        List<Account> AccList=new List<Account>();
-        for(Case cas : CaseList){
-            if(cas.AccountId!=null){
-                Account Acc=new Account();
-                Acc.Id=cas.AccountId;
-                Acc.Latest_Case_Number__c=cas.CaseNumber;
-                AccList.add(Acc);
+        if(CaseList!=null){
+            Map<Id,Case> TempMap=new Map<Id,Case>();
+            for(Case Cs : CaseList){
+                TempMap.put(Cs.AccountId,Cs);
             }
-        }
-        if(AccList!=null){ 
-            update AccList;
+            List<Account> AccList=[select id,Latest_Case_Number__c from Account where id in :TempMap.keySet()];
+            if(Acclist!=null){
+                for(Account Acc: AccList){
+                    Acc.Latest_Case_Number__c=TempMap.get(Acc.id).CaseNumber;
+                }
+            }
+            if(AccList!=null){ 
+                update AccList;
+            }
         }
     }
     public static void OpportunitytoAccount(List<Opportunity> OppList){
-        List<Account> AccList=new List<Account>();
-        for(Opportunity Opp : OppList){
-            if(Opp.AccountId!=null){
-                Account Acc=new Account();
-                Acc.Id=Opp.AccountId;
-                Acc.Recent_opportunity_Amount__c=Opp.Amount;
-                AccList.add(Acc);
+        if(OppList!=null){
+            Map<Id,Opportunity> TempMap=new Map<Id,Opportunity>();
+            for(Opportunity Opp : OppList){
+                TempMap.put(Opp.AccountId,Opp);
             }
-        }
-        if(AccList!=null){ 
-            update AccList;
+            List<Account> AccList=[select id,Recent_opportunity_Amount__c from Account where id in :TempMap.keySet()];
+            if(Acclist!=null){
+                for(Account Acc: AccList){
+                    if(TempMap.get(Acc.id).Amount!=null){
+                        Acc.Recent_opportunity_Amount__c=TempMap.get(Acc.id).Amount;
+                    }
+                }
+            }
+            if(AccList!=null){ 
+                update AccList;
+            }
         }
     }
-    public static void AccounttoContact(List<Account> AccList){
-        List<Contact> UpdatedContact=new List<Contact>();
-        List<id> AccIds=new List<id>();
-        for(Account Acc : AccList){
-            AccIds.add(Acc.Id);
-        }
-        List<Contact> ConList=[select id, AccountId, Phone from Contact where AccountId in :AccIds];
-        for(Account Acc:AccList){
+    public static void AccounttoContact(Map<id,Account> AccMap){
+        List<Contact> ConList=[select id, AccountId from contact where AccountId in :AccMap.keyset()];
+        if(!ConList.IsEmpty()){
             for(Contact Con:ConList){
-                if(Acc.id==con.AccountId){
-                    Con.Phone=Acc.Phone;
+                if(AccMap.ContainsKey(Con.AccountId)){
+                    Con.Phone=AccMap.get(Con.AccountId).Phone;
                 }
-                UpdatedContact.add(Con);
             }
         }
-        if(UpdatedContact!=null){ 
-            update UpdatedContact;
+        if(ConList!=null){ 
+            update ConList;
         }
     }
     public static void AccountNotUpdate(List<Account> AccList){
@@ -78,25 +82,22 @@ public class TriggerHandler {
         }
     }
     public static void AccountEmployeeCount(List<Employee__c> EmpList){
-        set<id> EmpIds=new set<id>();
-        for(Employee__c ids : EmpList){
-            Empids.add(ids.Account__c);
+        Map<id,List<Employee__c>> EmpIds=new Map<id,List<Employee__c>>();
+        for(Employee__c emp : EmpList){
+            if(!EmpIds.ContainsKey(emp.Account__c))
+                EmpIds.put(emp.Account__c,new List<Employee__c>());
+            EmpIds.get(emp.Account__c).add(emp);
         }
-        List<Account> UpdatedList=new List<Account>();
-        List<Account> AccList=[select id, NumberOfEmployees from Account where id in :EmpIds];
-        List<Employee__c> EmpList1=[select id,Account__c from Employee__c];
-        for(Account Acc:AccList){
-            Double i=0;
-            for(Employee__c emp: EmpList1){
-                if(emp.Account__c==Acc.id){
-                    i+=1;
-                }
+        List<Account> AccList=[select id, Present_Employee_Count__c,(Select id from Employees__r where Account__c in :EmpIds.keySet()) from Account where id in :EmpIds.keySet()];
+        for(Account Acc: AccList){
+            if(Acc.Present_Employee_Count__c==0){
+                Acc.Present_Employee_Count__c=1;
+            }else{
+                Acc.Present_Employee_Count__c=Acc.Employees__r.size();
             }
-            Acc.Present_Employee_Count__c=i;
-            UpdatedList.add(Acc);
         }
-        if(UpdatedList!=null){ 
-            update UpdatedList;
+        if(AccList!=null){ 
+            update AccList;
         }
     }
     public static void AccountPartnerCustomerCase(List<Case> CaseList){
@@ -129,25 +130,26 @@ public class TriggerHandler {
         }
     }
     public static void OpportunityTotalRevenue(List<Opportunity> OppList){
-        set<id> AccIds=new set<id>();
-        for(Opportunity Opp : OppList){
-            AccIds.add(Opp.AccountId);
+        Map<id,List<Opportunity>> OppIds=new Map<id,List<Opportunity>>();
+        for(Opportunity opp : OppList){
+            if(!OppIds.ContainsKey(opp.AccountId))
+                OppIds.put(opp.AccountId,new List<Opportunity>());
+            OppIds.get(opp.AccountId).add(opp);
         }
-        List<Account> UpdatedList=new List<Account>();
-        List<Account> AccList=[select id from Account where id in :AccIds];
-        List<Opportunity> OppList1=[select Amount, AccountId from Opportunity];
-        for(Account Acc : AccList){
-            decimal PseudoAmount=0;
-            for(Opportunity opp : OppList1){
-                if(Opp.AccountId==Acc.Id){
-                    PseudoAmount+=opp.Amount;
+        List<Account> AccList=[select id, AnnualRevenue, (Select id, Amount from Opportunities where AccountId in :OppIds.keySet()) from Account where id in :OppIds.keySet()];
+        if(AccList.size()!=0){
+            for(Account Acc: AccList){
+                Decimal PseudoAmount=0;
+                for(Opportunity Opp:Acc.Opportunities){
+                    if(Opp.Amount!=null){
+                        PseudoAmount+=Opp.Amount;
+                    }
                 }
+                Acc.AnnualRevenue=PseudoAmount;
             }
-            Acc.AnnualRevenue=PseudoAmount;
-            UpdatedList.add(Acc);
         }
-        if(UpdatedList!=null){ 
-            update UpdatedList;
+        if(AccList!=null){ 
+            update AccList;
         }
     }
     public static void ContactDuplicate(List<Contact> ConList){
@@ -156,6 +158,42 @@ public class TriggerHandler {
             for(Contact con1:ConList1){
                 if(con.Email==Con1.Email && con.Id!=con1.Id){
                     con.adderror('Duplicate Email Found!!!');
+                }
+            }
+        }
+    }
+    public static void OpptoAccount(List<Opportunity> OppList){
+        Map<id,List<Opportunity>> OppIds=new Map<id,List<Opportunity>>();
+        for(Opportunity opp : OppList){
+            if(!OppIds.ContainsKey(opp.AccountId))
+                OppIds.put(opp.AccountId,new List<Opportunity>());
+            OppIds.get(opp.AccountId).add(opp);
+        }
+        List<Account> AccList=[select id, Related_Opportunity__c, Total_Amount__c,(Select id, Amount from Opportunities where AccountId in :OppIds.keySet()) from Account where id in :OppIds.keySet()];
+        if(AccList.size()!=0){
+            for(Account Acc: AccList){
+                if(Acc.Opportunities.size()!=0){
+                    Acc.Related_Opportunity__c=Acc.Opportunities.size();
+                }
+                Decimal PseudoAmount=0;
+                for(Opportunity Opp:Acc.Opportunities){
+                    if(Opp.Amount!=null){
+                        PseudoAmount+=Opp.Amount;
+                    }
+                }
+                Acc.Total_Amount__c=PseudoAmount;
+            }
+        }
+        if(AccList!=null){ 
+            update AccList;
+        }
+    }
+    public static void AccountNoDelete(Map<id,Account> AccMap){
+        List<Account> AccQuery=[select id ,(Select id from Contacts where AccountId in :AccMap.keySet()) from Account where id in :AccMap.keySet()];
+        if(AccQuery.size()!=0){
+            for(Account Acc: AccQuery){
+                if(Acc.Contacts.size()>2){
+                    Acc.adderror('Account Can\'t be Deleted!!!');
                 }
             }
         }
