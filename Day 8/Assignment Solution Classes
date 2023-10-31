@@ -20,3 +20,37 @@ global class BatchClass1 implements Database.Batchable<sObject>, Database.Statef
         Database.executeBatch(batchcls);
     }
 }
+
+global class BatchClass2 implements Database.Batchable<sObject>, Database.AllowsCallouts, schedulable{
+    global Database.QueryLocator start(Database.BatchableContext bc){
+        return Database.GetQueryLocator('select id, Birthdate, Email from Contact where Birthdate!=null and Email!=null');
+    }
+    global void execute(Database.BatchableContext bc, List<Contact> ConList){
+        List<Contact> BirthdayList=new List<Contact>();
+        if(ConList.size()>0){
+            date todaydate=System.date.today();
+            for(Contact con: ConList){
+                if(con.Birthdate.day()==todaydate.day() && con.Birthdate.month()==todaydate.month()){
+                    BirthdayList.add(con);
+                }
+            }
+        }
+        if(!BirthdayList.isEmpty()){
+            List<Messaging.SingleEmailMessage> EmailList=new List<Messaging.SingleEmailMessage>();
+            for(Contact Birthday:BirthdayList){
+                Messaging.SingleEmailMessage email=new Messaging.SingleEmailMessage();
+                email.setTemplateId('00X5j000000iA5u');
+                email.setTargetObjectId(birthday.Id);
+                EmailList.add(email);
+            }
+            Messaging.sendEmail(EmailList);
+        }
+    }
+    global void finish(Database.BatchableContext bc){
+        System.debug('Birthday Email Send');
+    }
+    global void execute(SchedulableContext sc){
+        BatchClass2 batchcls=new BatchClass2();
+        Database.executeBatch(batchcls);
+    }
+}
