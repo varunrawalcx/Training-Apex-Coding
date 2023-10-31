@@ -1,3 +1,4 @@
+//Question 1
 global class BatchClass1 implements Database.Batchable<sObject>, Database.Stateful, schedulable{
     global Integer ContactCount=0;
     global Database.QueryLocator start(Database.BatchableContext bc){
@@ -20,7 +21,7 @@ global class BatchClass1 implements Database.Batchable<sObject>, Database.Statef
         Database.executeBatch(batchcls);
     }
 }
-
+//Question 2
 global class BatchClass2 implements Database.Batchable<sObject>, Database.AllowsCallouts, schedulable{
     global Database.QueryLocator start(Database.BatchableContext bc){
         return Database.GetQueryLocator('select id, Birthdate, Email from Contact where Birthdate!=null and Email!=null');
@@ -51,6 +52,30 @@ global class BatchClass2 implements Database.Batchable<sObject>, Database.Allows
     }
     global void execute(SchedulableContext sc){
         BatchClass2 batchcls=new BatchClass2();
+        Database.executeBatch(batchcls);
+    }
+}
+
+//Question 3
+global class BatchClass3 implements Database.Batchable<sObject>, schedulable{
+    global Database.QueryLocator start(Database.BatchableContext bc){
+        return Database.GetQueryLocator('select id, IsEscalated, CreatedDate from Case');
+    }
+    global void execute(Database.BatchableContext bc, List<Case> CaseList){
+        if(caseList.size()>0){
+            Date Todaydate=System.Date.today();
+            for(Case cs: CaseList){
+                if(cs.Status=='Open' && cs.CreatedDate.minute()>=30){
+                    cs.IsEscalated=True;
+                }
+            }
+            update CaseList;
+        }
+    }
+    global void finish(Database.BatchableContext bc){
+    }
+    global void execute(SchedulableContext sc){
+        BatchClass3 batchcls=new BatchClass3();
         Database.executeBatch(batchcls);
     }
 }
