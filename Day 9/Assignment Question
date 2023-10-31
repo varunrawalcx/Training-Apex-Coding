@@ -1,0 +1,3 @@
+1. Create a future method to create community user as per the contact detail. Method to be called from the contact trigger.
+2. Do the same with queueable method.
+3. Do the field mapping as dynamic, use field set for the same. User
