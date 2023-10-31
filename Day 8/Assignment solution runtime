@@ -1,0 +1,5 @@
+
+//Question 3
+BatchClass3 batchcls=new BatchClass3();
+String cronexp='0 1 * * * ?';
+System.schedule('Escalate Case After 30 min',cronexp,batchcls);
