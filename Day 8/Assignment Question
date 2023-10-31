@@ -1,7 +1,7 @@
 1. Create a new number field on account named ‘No of Contacts’, 
-  create a batch class to update the number of contacts. Call it from the schedule class and update the same daily.
+   create a batch class to update the number of contacts. Call it from the schedule class and update the same daily.
 
 2. Create batch class to send birthday email to the contacts on their birth day. (fetch from date of birth) [use stateful]
 
 3. Create a batch class to update a checkbox on case named ‘Escalated’. 
-  If the case is created and status is ‘Open’ for 30 mins then the checkbox value should be true
+   If the case is created and status is ‘Open’ for 30 mins then the checkbox value should be true
