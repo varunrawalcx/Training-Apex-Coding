@@ -1,3 +1,10 @@
+//Question 1
+BatchClass1 batchcls=new BatchClass1();
+Database.executeBatch(batchcls);
+
+//Question 2
+BatchClass2 batchcls=new BatchClass2();
+Database.executeBatch(batchcls);
 
 //Question 3
 BatchClass3 batchcls=new BatchClass3();
