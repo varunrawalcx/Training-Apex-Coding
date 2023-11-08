@@ -1,0 +1,39 @@
+################################Application###########################################
+<aura:application extends="force:slds">
+    <c:AccountRelatedContacts/>
+</aura:application>
+################################Application###########################################
+
+################################Controller###########################################
+({
+    doInit: function(component, event, helper) {
+        component.set("v.columns", [
+            { label: "Account Name", fieldName: "Account.Name", type: "text" },
+            { label: "First Name", fieldName: "FirstName", type: "text" },
+            { label: "Last Name", fieldName: "LastName", type: "text" },
+            { label: "Email", fieldName: "Email", type: "email" }
+        ]);
+        var action = component.get("c.relatedAccounts");
+        action.setCallback(this, function(response) {
+            let contacts = response.getReturnValue();
+            contacts.forEach(function(contact) {
+                contact['Account.Name'] = contact.Account.Name;
+                contact['Email'] = contact.Email;
+            });
+            component.set("v.contacts", contacts);
+        });
+        $A.enqueueAction(action);
+    },
+    
+    sendEmail: function(component, event, helper) {
+        var selectedContactsId=[];
+        var selectedContacts = component.find("datatable").getSelectedRows();
+        for(var i=0; i<selectedContacts.length ; i++){
+            selectedContactsId.push(selectedContacts[i].Id);
+        }
+        var action = component.get("c.SendEmail");
+        action.setParams({ "ConIdList": selectedContactsId });
+        action.setCallback(this, function(response){});
+        $A.enqueueAction(action);
+    }
+})
