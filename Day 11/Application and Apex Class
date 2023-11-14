@@ -1,0 +1,32 @@
+<aura:application extends="force:slds">
+    <c:AccountRelatedBooking />
+</aura:application>
+
+
+
+public class AccountRelatedBookingClass {
+    @AuraEnabled
+    public static List<Booking__c> relatedAccounts(id AccId){
+        List<Booking__c> bookList = [SELECT Id, Start_Date__c, End_Date__c, Account__c FROM Booking__c WHERE Account__c=:AccId];
+        system.debug(bookList);
+        return bookList;
+    }
+    @AuraEnabled
+    public static void insertBooking(Date startDate, Date endDate, Id accountId) {
+        List<Booking__c> bookList = [SELECT Id FROM Booking__c WHERE Account__c=:accountId];
+        system.debug(accountId);
+        Integer count=1;
+        for(Booking__c book:bookList){
+            count+=1;
+        }
+        Booking__c newBooking = new Booking__c(
+            Name='booking '+count,
+            Start_Date__c = startDate,
+            End_Date__c = endDate,
+            Comment__c='Booking Confirmed',
+            Account__c = accountId
+        );
+        insert newBooking;
+    }
+    
+}
