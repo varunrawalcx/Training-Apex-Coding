@@ -1,0 +1,3 @@
+  We have to make an object named as booking which has a lookup on account and has a field as StartDate ,EndDate and comment when the booking
+  is made then other bookings shouldn't be on the days between those dates and then save should be there and first input is done then check availability
+  then if booking already made on the same day then different pop up will be shown.
