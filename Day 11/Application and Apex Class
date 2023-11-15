@@ -1,15 +1,23 @@
-<aura:application extends="force:slds">
-    <c:AccountRelatedBooking />
-</aura:application>
-
-
-
 public class AccountRelatedBookingClass {
     @AuraEnabled
-    public static List<Booking__c> relatedAccounts(id AccId){
-        List<Booking__c> bookList = [SELECT Id, Start_Date__c, End_Date__c, Account__c FROM Booking__c WHERE Account__c=:AccId];
+    public static AccountBookingWrapper relatedAccounts(id AccId, date startDate, date endDate){
+        AccountBookingWrapper pseudowrapper=new AccountBookingWrapper();
+        List<Booking__c> bookList = [Select Name, Start_Date__c,End_Date__c, Account__c from Booking__c
+                                     where (Account__c=:AccId) and 
+                                     (  (not(Start_Date__c>:startDate and Start_Date__c>=:endDate))and 
+                                      (not(End_Date__c<=:startDate and End_Date__c<:endDate)))
+                                    ];   
         system.debug(bookList);
-        return bookList;
+        if(bookList.size()==0){
+            pseudowrapper.isSuccesfull=true;
+            pseudowrapper.Message='Booking Record not Found';
+        }else{
+            pseudowrapper.bookRecord=bookList;
+            pseudowrapper.isSuccesfull=false;
+            pseudowrapper.Message='Booking Record Found';
+        }
+        System.debug(pseudowrapper.isSuccesfull);
+        return pseudowrapper;
     }
     @AuraEnabled
     public static void insertBooking(Date startDate, Date endDate, Id accountId) {
@@ -27,6 +35,14 @@ public class AccountRelatedBookingClass {
             Account__c = accountId
         );
         insert newBooking;
+    }
+    public class AccountBookingWrapper{
+        @AuraEnabled
+        public List<Booking__c> bookRecord{get;set;}
+        @AuraEnabled
+        public String Message{get;set;}
+        @AuraEnabled
+        public Boolean isSuccesfull{get;set;}
     }
     
 }
