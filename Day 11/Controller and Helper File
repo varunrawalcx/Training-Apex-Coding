@@ -16,11 +16,13 @@ CONTROLLER
         }
     },
     openModel: function(component, event, helper) {
-        component.set("v.isModalOpen", true);
+        component.set("v.popUp1", true);
     },
     closeModel: function(component, event, helper) {
-        component.set("v.isModalOpen", false);
+        component.set("v.popUp1", false);
         component.set("v.isBookingConfirmed", false);
+        component.set("v.popUp3", false);
+        component.set("v.popUp2", false);
     },
     
     handleSave: function(component, event, helper) {
@@ -28,7 +30,8 @@ CONTROLLER
         console.log(action);
         action.setParams({"startDate": component.get("v.StartDate"), "endDate": component.get("v.EndDate"), "accountId": component.get("v.recordId")});
         $A.enqueueAction(action);
-        component.set("v.isModalOpen", false);
+        component.set("v.popUp1", false);
+        component.set("v.popUp2", true);
         component.set("v.isBookingConfirmed", true);
     }
 })
@@ -36,36 +39,28 @@ CONTROLLER
 HANDLER
 =============================================================
 ({
-    checkAvailabilityBooking: function(component) {
-        var action = component.get("c.relatedAccounts");
-        action.setParams({ "AccId": component.get("v.recordId") });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var bookingList = response.getReturnValue();
-                var isBookAvailable=true;
-                var counter=0;
-                bookingList.forEach(function(booking) {
-                    var bookingStartDate = new Date(booking.Start_Date__c);
-                    var bookingEndDate = new Date(booking.End_Date__c);
-                    var startDate = new Date(component.get("v.StartDate"));
-                    var endDate = new Date(component.get("v.EndDate"));
-                    if (!(bookingStartDate > startDate && bookingStartDate >= endDate) &&
-                        !(bookingEndDate <= startDate && bookingEndDate < endDate)) {
-                        isBookAvailable=false;
+        checkAvailabilityBooking: function(component) {
+            var action = component.get("c.relatedAccounts");
+            action.setParams({ "AccId": component.get("v.recordId") ,"startDate":component.get("v.StartDate"),"endDate":component.get("v.EndDate") });
+            action.setCallback(this, function(response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    var bookingWrapper = response.getReturnValue();
+                    console.log(bookingWrapper);
+                    component.set("v.isBookingAvailable", bookingWrapper.isSuccesfull);
+                    console.log(bookingWrapper.Message);
+                    console.log(bookingWrapper.isSuccesfull);
+                    if (bookingWrapper.isSuccesfull) {
+                        console.log('Popup1');
+                        component.set("v.popUp1", true);
+                    } else {
+                        console.log('Popup3');
+                        component.set("v.popUp3", true);
                     }
-                    console.log(isBookAvailable);
-                    component.set("v.isBookingAvailable",isBookAvailable);
-                    counter=counter+1;
-                });
-                if(counter===0){
-                    component.set("v.isBookingAvailable",isBookAvailable);
+                } else {
+                    console.error('Error in server call: ' + state);
                 }
-                component.set("v.isModalOpen",true);
-            } else {
-                console.error('Error in server call: ' + state);
-            }
-        });
-        $A.enqueueAction(action);
-    }
-})
+            });
+            $A.enqueueAction(action);
+        }
+    })
