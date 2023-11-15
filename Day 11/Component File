@@ -4,109 +4,6 @@
     <aura:attribute name="recordId" type="Id"/>
     <aura:attribute name="isBookingAvailable" type="Boolean" default="false"/>
     <aura:attribute name="isDateValid" type="Boolean" default="true"/>
-    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
-    <aura:attribute name="isBookingConfirmed" type="boolean" default="false"/>
-    
-    <lightning:input type="date" label="Start Date" value="{!v.StartDate}" name="StartDate"/>
-    <lightning:input type="date" label="End Date" value="{!v.EndDate}" name="EndDate"/><br/>
-    
-    <center>    
-        <lightning:button variant="brand" label="Check Availability" onclick="{!c.checkDateValid}" class="slds-m-left_x-small"/>
-    </center>
-    
-    <aura:if isTrue="{!not(v.isDateValid)}">
-        <div class="slds-form-element__help slds-text-color_error">Start Date Should be Less than End Date</div>
-    </aura:if>
-    <aura:if isTrue="{!v.isDateValid}">
-        <aura:if isTrue="{!v.isBookingAvailable}">
-            <aura:if isTrue="{!v.isModalOpen}">
-                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-                    <div class="slds-modal__container">
-                        <header class="slds-modal__header">
-                            <lightning:buttonIcon iconName="utility:close"
-                                                  onclick="{! c.closeModel }"
-                                                  alternativeText="close"
-                                                  variant="bare-inverse"
-                                                  class="slds-modal__close"/>
-                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Booking Available</h2>
-                        </header>
-                        <div class="slds-modal__content slds-p-around_medium">
-                            <p><center>Start Date: {!v.StartDate} </center></p>
-                            <p><center>End Date: {!v.EndDate}</center></p>
-                        </div>
-                        <footer class="slds-modal__footer">
-                            <lightning:button variant="brand" label="Make Booking" onclick="{!c.handleSave}"/>
-                            <lightning:button variant="neutral" label="Cancel Booking" onclick="{!c.closeModel}"/>
-                        </footer>
-                    </div>
-                </section>
-                <div class="slds-backdrop slds-backdrop_open"></div>
-            </aura:if>
-                <aura:if isTrue="{!v.isBookingConfirmed}">
-                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-                        <div class="slds-modal__container">
-                            <header class="slds-modal__header">
-                                <lightning:buttonIcon iconName="utility:close"
-                                                      onclick="{! c.closeModel }"
-                                                      alternativeText="close"
-                                                      variant="bare-inverse"
-                                                      class="slds-modal__close"/>
-                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Booking Successfull</h2>
-                            </header>
-                            <div class="slds-modal__content slds-p-around_medium">
-                                <center>Booking Confirmed</center>
-                            </div>
-                            <footer class="slds-modal__footer">
-                                <lightning:button variant="neutral" label="Go Back" onclick="{!c.closeModel}"/>
-                            </footer>
-                        </div>
-                    </section>
-                    <div class="slds-backdrop slds-backdrop_open"></div>
-                </aura:if>
-        </aura:if>
-        
-        <aura:if isTrue="{!not(v.isBookingAvailable)}">
-            <aura:if isTrue="{!v.isModalOpen}">
-                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-                    <div class="slds-modal__container">
-                        <header class="slds-modal__header">
-                            <lightning:buttonIcon iconName="utility:close"
-                                                  onclick="{! c.closeModel }"
-                                                  alternativeText="close"
-                                                  variant="bare-inverse"
-                                                  class="slds-modal__close"/>
-                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Booking Not Available</h2>
-                        </header>
-                        <div class="slds-modal__content slds-p-around_medium">
-                            <p>Start Date: "{!v.StartDate}" </p>
-                            <p>End Date: "{!v.EndDate}"</p>
-                            <br/>
-                            <br/>
-                            <center class="slds-text-heading_medium">Sorry Booking Already Done Between These Date</center>
-                        </div>
-                        <footer class="slds-modal__footer">
-                            <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModel}"/>
-                        </footer>
-                    </div>
-                </section>
-                <div class="slds-backdrop slds-backdrop_open"></div>
-            </aura:if>
-        </aura:if>
-    </aura:if>
-</aura:component>
-
-
-
-
-
-
-
-<aura:component controller="AccountRelatedBookingClass" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global">
-    <aura:attribute name="StartDate" type="Date"/>
-    <aura:attribute name="EndDate" type="Date"/>
-    <aura:attribute name="recordId" type="Id"/>
-    <aura:attribute name="isBookingAvailable" type="Boolean" default="false"/>
-    <aura:attribute name="isDateValid" type="Boolean" default="true"/>
     <aura:attribute name="popUp1" type="boolean" default="false"/>
     <aura:attribute name="popUp2" type="boolean" default="false"/>
     <aura:attribute name="popUp3" type="boolean" default="false"/>
@@ -238,7 +135,4 @@
             <div class="slds-backdrop slds-backdrop_open"></div>
         </aura:if>
     </aura:if>
-    
-    
-    
 </aura:component>
