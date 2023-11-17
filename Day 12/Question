@@ -1,0 +1,3 @@
+We have to Make a LWC Component where it shows related contacts of that Account and there is also a picklist field 
+which is fetched from an account fields(Any Picklist field) then there is a save button we have to make which when 
+hit then firstly it updates the picklist value in the account and then it send the email to the selected contact
