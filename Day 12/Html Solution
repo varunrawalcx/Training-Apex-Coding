@@ -1,0 +1,16 @@
+  <template>
+    <lightning-card title="Related Contact List LWC">
+        <lightning-combobox name="AccountType" label="Account Type" value={value} placeholder="--Select--"
+            options={pklValues} onchange={handlechange}>
+        </lightning-combobox>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <lightning-button variant="brand" label="Save" onclick={handleClick}
+            class="slds-m-left_x-small"></lightning-button>
+        <div style="height: 300px;">
+            <lightning-datatable key-field="id" data={ConData} columns={columns}>
+            </lightning-datatable>
+        </div>
+    </lightning-card>
+</template>
