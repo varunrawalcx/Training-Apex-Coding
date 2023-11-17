@@ -1,0 +1,37 @@
+public with sharing class AccountClass {
+    @AuraEnabled
+    public static List<Contact> FetchRelatedContact(string accId){
+        try {
+            List<Contact> conList=[select FirstName, LastName, Email, Phone, AccountId from Contact where AccountId=:accId];
+            return conList;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+    @AuraEnabled
+    public static void updateAccount(string accId, string accType){
+        try {
+            Account acc=[select Id, Type from Account where Id=:accId];
+            acc.Type=accType;
+            update acc;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+    @AuraEnabled
+    public static void SendEmail(List<Contact> ConIdList){
+        if(!(ConIdList.isEmpty())){
+            id emailTemplateID=[select Id ,DeveloperName from EmailTemplate where DeveloperName='Birthday_Email_Template'].Id;
+            List<Messaging.SingleEmailMessage> EmailList=new List<Messaging.SingleEmailMessage>();
+            for(Contact con:ConIdList){
+                Messaging.SingleEmailMessage email=new Messaging.SingleEmailMessage();
+                email.setTemplateId(emailTemplateID);
+                email.setTargetObjectId(con.Id);
+                EmailList.add(email);
+            }
+            if(!(EmailList.isEmpty())){
+                Messaging.sendEmail(EmailList);
+            }
+        }
+    }
+}
