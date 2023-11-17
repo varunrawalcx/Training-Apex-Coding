@@ -1,0 +1,101 @@
+##########################################################
+####################JS####################################
+##########################################################
+import { LightningElement ,api,track, wire} from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import FetchRelatedContact from '@salesforce/apex/AccountClass.FetchRelatedContact';
+import updateAccount from '@salesforce/apex/AccountClass.updateAccount';
+import SendEmail from '@salesforce/apex/AccountClass.SendEmail';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import AccountType from '@salesforce/schema/Account.Type';
+const columns = [
+    {label: 'First Name', fieldName: 'FirstName'},
+    {label: 'Last Name', fieldName: 'LastName'},
+    {label: 'Email',fieldName: 'Email',type: 'email'},
+    {label: 'Phone',fieldName: 'phone',type: 'phone'}
+];
+
+
+export default class AccountRelatedContact extends LightningElement {
+    
+    @track pklValues;
+    @api recordId;
+    ConData;
+    columns = columns;
+    error;
+    selectedPklVal;
+    isLoading=false;
+    selectedContact;
+
+    connectedCallback(){
+        FetchRelatedContact({ accId: this.recordId })
+        .then(result => {
+        this.ConData = result;
+        })
+    }
+    @wire(getPicklistValues,{
+        recordTypeId :'012000000000000AAA',
+        fieldApiName :AccountType
+    })
+    wirePickListValue({data,error}){
+        if(data){
+            this.pklValues=data.values;
+            this.error=undefined;
+        }
+        if(error){
+            this.pklValues=undefined;
+            this.error=error;
+        }
+    }
+
+    handlechange(event){
+        this.selectedPklVal = event.detail.value;
+        console.log('picklist value:- ',this.selectedPklVal);
+    }
+    
+    handleClick() {
+        this.isLoading=true;
+        console.log(this.isLoading);
+
+        var allContact = this.template.querySelector('lightning-datatable');
+        this.selectedContact = allContact.getSelectedRows();
+        console.log(this.selectedContact);
+
+        this.updateAccountData();
+        this.SendEmailData();
+        setTimeout(() => {
+            const evt = new ShowToastEvent({
+                title: 'Operation Successfull',
+                message: 'Account Type Updated and Email also Sent',
+                variant: 'success',
+              });
+              this.dispatchEvent(evt);
+            this.isLoading=false;
+          }, 3000);
+        console.log(this.isLoading);
+      }
+
+    updateAccountData() {
+        updateAccount({ accId: this.recordId, accType: this.selectedPklVal })
+        console.log('Update Sucessfull');
+    }
+
+    SendEmailData(){
+        SendEmail({ ConIdList: this.selectedContact})
+        console.log('Email Sucessfull');
+    }
+    
+}
+##########################################################
+####################Meta.XML####################################
+##########################################################
+
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__RecordPage</target>
+    </targets>
+    
+</LightningComponentBundle>
