@@ -1,0 +1,178 @@
+##################HTML##########################
+<template>
+    <lightning-card title="Related Contact List">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <div style="height: 300px;">
+            <lightning-datatable key-field="id" data={ConData} columns={columns} hide-checkbox-column="true"
+             show-row-number-column="true" onrowaction={callRowAction}>
+            </lightning-datatable>
+        </div>
+        <template if:true={disableButton}>
+            <lightning-button variant="brand" class="slds-m-right_x-small" label="Upload File" onclick={handleUpload}>
+            </lightning-button>
+        </template>
+    </lightning-card>
+</template>
+
+##################JS##########################
+
+import { LightningElement,api, wire, track} from 'lwc';
+import relatedContact from '@salesforce/apex/ContactLwc2.relatedContact';
+import deleteRecord from '@salesforce/apex/ContactLwc2.deleteRecord';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import {publish, MessageContext} from 'lightning/messageService';
+import fetchContactDetails from '@salesforce/messageChannel/fetchContactDetails__c';
+import savePdf from '@salesforce/apex/ContactLwc2.savePdf';
+
+
+export default class RelatedContactLwc extends LightningElement {
+    columns = [
+        {label: 'Title',fieldName: 'Title'},
+        {label: 'First Name', fieldName: 'FirstName'},
+        {label: 'Last Name', fieldName: 'LastName'},
+        {label: 'Email',fieldName: 'Email',type: 'email'},
+        {label: 'Phone',fieldName: 'Phone',type: 'phone'},
+        {label: 'Department',fieldName: 'Department'},
+        {
+            type: "button", label: 'Edit', initialWidth: 100, typeAttributes: {
+                label: 'Edit',
+                name: 'Edit',
+                title: 'Edit',
+                value: 'edit',
+                iconPosition: 'left',
+                iconName:'utility:edit',
+                variant:'Brand'
+            }
+        },
+        {
+            type: "button", label: 'Delete', initialWidth: 110, typeAttributes: {
+                label: 'Delete',
+                name: 'Delete',
+                title: 'Delete',
+                value: 'delete',
+                iconPosition: 'left',
+                iconName:'utility:delete',
+                variant:'destructive'
+            }
+        },
+        {
+            type: "button", label: 'Upload File', initialWidth: 100, typeAttributes: {
+                label: 'Upload File',
+                name: 'uploadFile',
+                title: 'uploadFile',
+                value: 'uploadfilevalue',
+                variant:'Brand',
+                disabled:this.disableButton
+            }
+        },
+        
+    ];
+    disableButton;
+    @track ConData;
+    @track message;
+    @api recordId;
+    isLoading=false;
+    idCon;
+
+    @wire(MessageContext)
+    messageContext;
+
+
+
+    constructor() {
+        super();
+        this.wiredContacts;
+      }
+
+    @wire(relatedContact, { accId: '$recordId' })
+    wiredContacts(result) {
+        if (result.data) {
+            this.ConData = result.data.conList;
+            this.message = result.data.message;
+            this.disableButton=false;
+        } else if (result.error) {
+            console.error('Error fetching data:', result.error);
+            this.message = 'Error fetching data';
+        }
+    }
+
+
+    callRowAction(event) {
+        const recId = event.detail.row.Id;
+        const recList=event.detail.row;
+        const actionName = event.detail.action.name;
+        console.log(recId);
+        console.log(actionName);
+        if (actionName == 'Edit') {
+            this.handleAction(recList);
+            console.log('edit');
+        } else if (actionName == 'Delete') {
+            this.handleDeleteRow(recId);
+            console.log('delete');
+        } else if (actionName == 'uploadFile') {
+            this.handleUploadFile();
+            this.idCon=recId;
+            console.log('Uploading');
+        }
+    }
+
+    handleUploadFile(){
+        this.disableButton=true;
+
+    }
+
+    handleUpload(){
+        this.isLoading=true;
+        savePdf({accId:this.recordId,conId:this.idCon});
+        setTimeout(() => {
+            console.log('showing Toast');
+            this.showToast('Success', 'File Uploaded successfully', 'success', 'dismissable');
+            this.isLoading=false;
+            console.log('isLoading:- ',this.isLoading);
+            this.disableButton=false;
+          }, 2000);
+        
+    }
+
+    handleDeleteRow(deleteRecordId){
+        this.isLoading=true;
+        console.log('isLoading:- ',this.isLoading);
+        console.log('Delete RecordID:- ',deleteRecordId);
+        deleteRecord({conId: deleteRecordId});
+        setTimeout(() => {
+            console.log('showing Toast');
+            this.showToast('Success', 'Record deleted successfully', 'success', 'dismissable');
+            this.isLoading=false;
+            console.log('isLoading:- ',this.isLoading);
+          }, 2000);
+        
+    }
+
+    handleAction(editConList){
+        const payload={
+            contactList:editConList
+        };
+        publish(this.messageContext, fetchContactDetails, payload);
+    }
+
+    showToast(title, message, variant) {
+        const evt = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+        });
+        this.dispatchEvent(evt);
+    }
+}
+
+##################XML##########################
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__RecordPage</target>
+    </targets>
+</LightningComponentBundle>
