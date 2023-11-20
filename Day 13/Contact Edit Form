@@ -1,0 +1,198 @@
+####################################HTML#######################################
+<template>
+    <lightning-card title="Contact Edit Form">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <lightning-record-edit-form record-id={recId} object-api-name="Contact" columns="2" mode="edit"
+            layout-type="Compact">
+            <lightning-messages></lightning-messages>
+            <lightning-input-field field-name="Title" value={titleValue}
+                onchange={handleTitleChange}></lightning-input-field>
+            <lightning-input-field field-name="FirstName" value={firstNameValue}
+                onchange={handleFirstNameChange}></lightning-input-field>
+            <lightning-input-field field-name="LastName" value={lastNameValue}
+                onchange={handleLastNameChange}></lightning-input-field>
+            <lightning-input-field field-name="Email" value={emailValue}
+                onchange={handleEmailChange}></lightning-input-field>
+            <lightning-input-field field-name="Phone" value={phoneValue}
+                onchange={handlePhoneChange}></lightning-input-field>
+            <lightning-input-field field-name="Department" value={departmentValue}
+                onchange={handleDepartmentChange}></lightning-input-field>
+            <template if:true={isMessage}>
+                <div class="slds-m-top_small slds-align_absolute-center">
+                    <lightning-button variant="Neutral" label="Cancel" class="slds-m-left_x-small"
+                        onclick={handleCancel}>
+                    </lightning-button>
+                    <lightning-button variant="brand" class="slds-m-left_x-small" label="Update" onclick={handleUpdate}>
+                    </lightning-button>
+                </div>
+            </template>
+        </lightning-record-edit-form>
+    </lightning-card>
+</template>
+
+####################################JS#######################################
+import { LightningElement, wire, track} from 'lwc';
+import {subscribe,MessageContext} from 'lightning/messageService';
+import fetchContactDetails from '@salesforce/messageChannel/fetchContactDetails__c';
+import updateContact from '@salesforce/apex/ContactLwc2.updateContact';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
+export default class ContactEditForm extends LightningElement {
+    subscription=null;
+    @track conData;
+    recId;
+    @wire(MessageContext)
+    messageContext;
+
+    isLoading=false;
+    isMessage;
+    titleValue;
+    firstNameValue;
+    lastNameValue;
+    emailValue;
+    phoneValue;
+    departmentValue;
+
+    connectedCallback(){
+        this.isMessage=false;
+        this.subscribeToMessageChannel();
+    }
+
+    subscribeToMessageChannel(){
+        this.subscription=subscribe(
+            this.messageContext,
+            fetchContactDetails,
+            (message)=>this.handleMessage(message)
+        );
+    }
+
+    handleMessage(message){
+        this.conData=message.contactList;
+        this.recId=this.conData.Id;
+        this.isMessage=true;
+        console.log(JSON.stringify(this.conData));
+        const inputFields = this.template.querySelectorAll(
+            'lightning-input-field'
+        );
+        console.log(JSON.stringify(inputFields));
+        if (inputFields) {
+            inputFields.forEach(field => {
+                if(field.fieldName == 'Title'){
+                    field.value = this.conData.Title;
+                    this.titleValue= this.conData.Title;
+                }
+                if(field.fieldName == 'FirstName'){
+                    field.value = this.conData.FirstName;
+                    this.firstNameValue = this.conData.FirstName;
+                }
+                if(field.fieldName == 'LastName'){
+                    field.value = this.conData.LastName;
+                    this.lastNameValue = this.conData.LastName;
+                }
+                if(field.fieldName == 'Email'){
+                    field.value = this.conData.Email;
+                    this.emailValue = this.conData.Email;
+                }
+                if(field.fieldName == 'Phone'){
+                    field.value = this.conData.Phone;
+                    this.phoneValue = this.conData.Phone;
+                }
+                if(field.fieldName == 'Department'){
+                    field.value = this.conData.Department;
+                    this.departmentValue = this.conData.Department;
+                }
+            });
+        }
+        console.log(JSON.stringify(this.titleValue));
+        console.log(JSON.stringify(this.firstNameValue));
+        console.log(JSON.stringify(this.lastNameValue));
+        console.log(JSON.stringify(this.emailValue));
+        console.log(JSON.stringify(this.phoneValue));
+        console.log(JSON.stringify(this.departmentValue));
+        
+    }
+
+
+    handleCancel(){
+        this.titleValue="";
+        this.firstNameValue="";
+        this.lastNameValue="";
+        this.emailValue="";
+        this.phoneValue="";
+        this.departmentValue="";
+        this.isMessage=false;
+    }
+
+    handleUpdate(){
+        if(this.lastNameValue){
+            this.isLoading=true;
+            updateContact({
+                conId: this.recId,
+                titleValue: this.titleValue,
+                firstNameValue: this.firstNameValue, 
+                lastNameValue: this.lastNameValue, 
+                emailValue: this.emailValue, 
+                phoneValue: this.phoneValue, 
+                departmentValue: this.departmentValue
+            });
+            setTimeout(() => {
+                console.log('showing Toast');
+                this.showToast('Success', 'Record Updated successfully', 'success', 'dismissable');
+                this.isLoading=false;
+                console.log('isLoading:- ',this.isLoading);
+                this.isMessage=false;
+              }, 2000);
+              this.handleCancel();
+        }else{
+            alert('Last Name Shouldn\'t be Blank');
+        }
+        
+    }
+
+
+    handleTitleChange(event){
+        this.titleValue = event.target.value;
+    }
+
+    handleFirstNameChange(event){
+        this.firstNameValue = event.target.value;
+    }
+
+    handleLastNameChange(event){
+        this.lastNameValue = event.target.value;
+    }
+
+    handleEmailChange(event){
+        this.emailValue = event.target.value;
+    }
+
+    handlePhoneChange(event){
+        this.phoneValue = event.target.value;
+    }
+
+    handleDepartmentChange(event){
+        this.departmentValue = event.target.value;
+    }
+
+    showToast(title, message, variant) {
+        const evt = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+        });
+        this.dispatchEvent(evt);
+    }
+}
+
+####################################XML#######################################
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__RecordPage</target>
+    </targets>
+</LightningComponentBundle>
+  
