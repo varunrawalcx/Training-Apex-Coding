@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LightningMessageChannel xmlns="https://soap/sforce.com/2006/04/metadata">
+
+    <masterLabel>getContact</masterLabel>
+    <isExposed>true</isExposed>
+    <description>Message Channel to Get Contact Value and showing in the different component</description>
+
+    <lightningMessageFields>
+        <fieldName>contactList</fieldName>
+    </lightningMessageFields>
+
+
+</LightningMessageChannel>
