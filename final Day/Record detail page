@@ -1,0 +1,290 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+html
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    <lightning-layout>
+        <div class="demo-only demo-only--sizing">
+            <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                <lightning-button label="< Back to List" variant="base" onclick={handleBackToList}></lightning-button>
+            </div>
+        </div>
+    </lightning-layout>
+    <lightning-layout>
+        <div class="demo-only demo-only--sizing slds-grid slds-wrap"
+            style="font-weight: 600; font-size: 32px; line-height: 44px; font-family: 'Noto Serif'; margin-top: 11px; color: #094183;">
+            {courseName}
+        </div>
+    </lightning-layout>
+    <hr>
+    <!-- Header (Image) Section -->
+    <lightning-layout>
+        <div class="slds-size_3-of-3">
+            <div class="demo-only demo-only--sizing">
+                <img src={ImageUrl} alt={courseName} style="width: 100%;height: 250px;object-fit: cover;display: block;" />
+            </div>
+        </div>
+    </lightning-layout>
+    <!-- Body Section -->
+    <lightning-layout>
+        <div style="border: 1px solid #ccc; padding: 20px; border-radius: 8px; width: 100%;margin: 0 auto;">
+            <div class="body demo-only demo-only--sizing slds-grid slds-wrap">
+                <!-- Start and End Date -->
+                <div class="slds-col slds-size_1-of-2">
+                    <p
+                        style="font-weight: 600; font-size: 20px; line-height: 25px; color: #094183; -webkit-box-align: center; -ms-flex-align: center; align-items: center; display: -webkit-box; display: -ms-flexbox; display: flex; margin-bottom: 6px; display: flex; align-items: center;">
+                        Dates and times
+                    </p>
+                    <div class="slds-col">
+                        <p
+                            style="font-weight: 600; font-size: 20px; line-height: 25px; color: #094183; -webkit-box-align: center; -ms-flex-align: center; align-items: center; display: -webkit-box; display: -ms-flexbox; display: flex; margin-bottom: 6px; display: flex; align-items: center;">
+                            Start time:
+                            <span
+                                style="font-family: Source Sans Pro; font-style: normal; font-weight: bold; font-size: 16px; line-height: 20px;">
+                                <lightning-formatted-date-time value={StartDate} weekday="short" month="short"
+                                    day="2-digit" hour="numeric" year="2-digit"
+                                    minute="2-digit"></lightning-formatted-date-time>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="slds-col">
+                        <p
+                            style="font-weight: 600; font-size: 20px; line-height: 25px; color: #094183; -webkit-box-align: center; -ms-flex-align: center; align-items: center; display: -webkit-box; display: -ms-flexbox; display: flex; margin-bottom: 6px; display: flex; align-items: center;">
+                            End time:
+                            <span
+                                style="font-family: Source Sans Pro; font-style: normal; font-weight: bold; font-size: 16px; line-height: 20px;">
+                                <lightning-formatted-date-time value={EndDate} weekday="short" month="short"
+                                    day="2-digit" hour="numeric" year="2-digit"
+                                    minute="2-digit"></lightning-formatted-date-time>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <!-- Registration Button -->
+                <div class="slds-col slds-size_1-of-2">
+                    <template if:false={isLogin}>
+                        <div class="slds-m-top_medium">
+                            <lightning-button label="Log in for Registration" onclick={handleOpenWebpageButton}
+                                variant="brand"></lightning-button>
+                        </div>
+                    </template>
+                    <template if:true={isLogin}>
+                        <template if:true={isRegistered}>
+                            <p style="color: #094183; font-weight: bold;">Already Applied</p>
+                        </template>
+                        <template if:false={isRegistered}>
+                            <lightning-button label="Register" variant="brand" onclick={handleRegistrationButton}
+                                style="width: 100%; background: #094183; border-radius: 4px; border: #094183 1px solid; height: 47px; color: #fff; font-weight: bold; font-size: 16px; line-height: 25px;"></lightning-button>
+                        </template>
+                    </template>
+
+                </div>
+
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </template>
+            </div>
+        </div>
+    </lightning-layout>
+    <!-- Rich Text Area -->
+    <div style="display:flex; flex-direction:row;">
+        <div class="slds-col slds-size_1-of-2" style="margin-top: 20px;">
+            <lightning-formatted-rich-text value={AboutCourse}></lightning-formatted-rich-text>
+        </div>
+
+        <!-- Card Section -->
+        <div class="slds-col slds-size_1-of-2" style="margin-top: 20px;padding:25px">
+            <lightning-card title="Course Details" >
+                <div style="padding:18px;">
+                <div
+                    style="font-weight: 600; font-size: 20px; line-height: 25px; color: #094183; -webkit-box-align: center; -ms-flex-align: center; align-items: center; display: -webkit-box; display: -ms-flexbox; display: flex; margin-bottom: 6px; display: flex; align-items: center;">
+                    <p>Location</p>
+                    <br />
+                </div>
+                <div
+                    style="font-family: Source Sans Pro; font-style: normal; font-weight: bold; font-size: 16px; line-height: 20px;">
+                    <p>{Location}</p>
+                    <br />
+                </div>
+                <div
+                    style="font-weight: 600; font-size: 20px; line-height: 25px; color: #094183; -webkit-box-align: center; -ms-flex-align: center; align-items: center; display: -webkit-box; display: -ms-flexbox; display: flex; margin-bottom: 6px; display: flex; align-items: center;">
+                    <p>Registration</p>
+                    <br />
+                </div>
+                <div
+                    style="font-family: Source Sans Pro; font-style: normal; font-weight: bold; font-size: 16px; line-height: 20px;">
+                    <p>{courseName}</p>
+                    <p>A${Registration} incl gst</p>
+                    <br />
+                </div>
+                <div>
+                    <p
+                        style="font-weight: 600; font-size: 20px; line-height: 25px; color: #094183; -webkit-box-align: center; -ms-flex-align: center; align-items: center; display: -webkit-box; display: -ms-flexbox; display: flex; margin-bottom: 6px; display: flex; align-items: center;">
+                        Dates and times</p>
+                    <br>
+                    <p
+                        style="font-weight: 600; font-size: 20px; line-height: 25px; color: #094183; -webkit-box-align: center; -ms-flex-align: center; align-items: center; display: -webkit-box; display: -ms-flexbox; display: flex; margin-bottom: 6px; display: flex; align-items: center;">
+                        Start time:</p>
+                    <p
+                        style="font-family: Source Sans Pro; font-style: normal; font-weight: bold; font-size: 16px; line-height: 20px;">
+                        <lightning-formatted-date-time value={StartDate} weekday="short" month="short" day="2-digit"
+                            hour="numeric" year="2-digit" minute="2-digit"></lightning-formatted-date-time>
+                    </p>
+                    <br>
+                    <p
+                        style="font-weight: 600; font-size: 20px; line-height: 25px; color: #094183; -webkit-box-align: center; -ms-flex-align: center; align-items: center; display: -webkit-box; display: -ms-flexbox; display: flex; margin-bottom: 6px; display: flex; align-items: center;">
+                        End time:</p>
+                    <p
+                        style="font-family: Source Sans Pro; font-style: normal; font-weight: bold; font-size: 16px; line-height: 20px;">
+                        <lightning-formatted-date-time value={EndDate} weekday="short" month="short" day="2-digit"
+                            hour="numeric" year="2-digit" minute="2-digit"></lightning-formatted-date-time>
+                    </p>
+                </div>
+            </div>
+            </lightning-card>
+        </div>
+    </div>
+</template>
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+js
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+import { LightningElement, api, wire } from 'lwc';
+import { getRecord } from 'lightning/uiRecordApi';
+import checkAppliedCourses from '@salesforce/apex/GetCourses.checkAppliedCourses';
+import applyCourse from '@salesforce/apex/GetCourses.applyCourse';
+import getAccountId from '@salesforce/apex/GetCourses.getAccountId';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
+import { CurrentPageReference } from 'lightning/navigation';
+import portalUserId from "@salesforce/user/Id";
+
+
+const FIELDS = [
+    'Courses__c.Name',
+    'Courses__c.StartDate__c',
+    'Courses__c.EndDate__c',
+    'Courses__c.AboutCourse__c',
+    'Courses__c.Location__c',
+    'Courses__c.Registration__c',
+    'Courses__c.ImageUrl__c',
+    'Courses__c.HeadingText__c',
+    'Courses__c.DeliveryMode__c'
+]
+
+export default class CourseComponent extends LightningElement {
+
+    recordId='';
+    isRegistered;
+    record;
+    error;
+    courseName;
+    StartDate;
+    EndDate;
+    headingData;
+    AboutCourse;
+    Location;
+    Registration;
+    ImageUrl;
+    deliveryMode;
+    isLoading = false;
+    isLogin;
+    userId='';
+    pAccId;
+
+    @wire(CurrentPageReference)
+    pageReference;
+
+    connectedCallback() {
+        this.recordId = this.pageReference.state.id;
+        this.userId = portalUserId;
+        this.handleGetAccountId();
+        this.handleCheckAppliedCourses();
+    }
+
+    
+
+    handleCheckAppliedCourses() {
+        checkAppliedCourses({ accId: this.pAccId, appliedCourseId: this.recordId })
+            .then(result => {
+                this.isRegistered = result;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+    @wire(getRecord, { recordId: '$recordId', fields: FIELDS })
+    wiredRecord({ error, data }) {
+        if (data) {
+            this.record = data;
+            this.courseName = this.record.fields.Name.value;
+            this.StartDate = this.record.fields.StartDate__c.value;
+            this.EndDate = this.record.fields.EndDate__c.value;
+            this.AboutCourse = this.record.fields.AboutCourse__c.value;
+            this.Location = this.record.fields.Location__c.value;
+            this.Registration = this.record.fields.Registration__c.value;
+            this.ImageUrl = this.record.fields.ImageUrl__c.value;
+            this.headingData = this.record.fields.HeadingText__c.value;
+            this.deliveryMode = this.record.fields.DeliveryMode__c.value;
+            this.error = undefined;
+        }
+        else if (error) {
+            this.error = error;
+            this.record = undefined;
+        }
+    } 
+
+    handleGetAccountId(){
+        getAccountId({ userId: this.userId})
+            .then(result => {
+                this.pAccId = result;
+                this.isLogin=true;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+
+    handleRegistrationButton() {
+        this.isLoading = true;
+        applyCourse({ accId: this.pAccId, appliedCourseId: this.recordId })
+            .then(result => {
+                if (result) {
+                    this.showToast('Success', 'Course applied successfully', 'success', 'dismissable');
+                } else {
+                    this.showToast('Error', 'Failed to apply for the course', 'error', 'dismissable');
+                }
+                this.isRegistered = result;
+                this.isLoading = false;
+            })
+            .catch(error => {
+                console.error('Error applying course:', error);
+                this.showToast('Error', 'An error occurred while applying for the course', 'error', 'dismissable');
+                this.isLoading = false;
+            });
+    }
+
+
+    handleBackToList() {
+        const webpageUrl = 'https://d5j00000dprdsea5-dev-ed.develop.my.site.com/s/short-courses';
+        window.location.href = webpageUrl;
+    }
+
+    showToast(title, message, variant) {
+        const evt = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+        });
+        this.dispatchEvent(evt);
+    }
+
+    handleOpenWebpageButton() {
+        const webpageUrl = 'https://d5j00000dprdsea5-dev-ed.develop.my.site.com/s/login/';
+        window.location.href = webpageUrl;
+    }
+}
