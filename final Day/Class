@@ -1,0 +1,87 @@
+public class GetCourses {
+    @AuraEnabled(cacheable=true)
+    public static CourseWrapper fetchCourse(){
+        try {
+            List<String> fieldName=new List<String>();
+            String fieldSetName = 'communityCourseFieldset';
+            Schema.FieldSet courseFieldset = Schema.SObjectType.Courses__c.fieldSets.getMap().get(fieldSetName);
+            String dynamicQuery = 'SELECT Id';
+            for (Schema.FieldSetMember field : courseFieldset.getFields()) {
+                dynamicQuery += ', ' + field.getFieldPath();
+                fieldName.add(field.getFieldPath());
+            }
+            dynamicQuery += ' FROM Courses__c WHERE WebsiteVisibility__c=true';
+            system.debug(courseFieldset.getFields());
+            List<Courses__c> courseListNew = Database.query(dynamicQuery);
+            system.debug(courseListNew);
+        
+            CourseWrapper pseudoWrapper=new CourseWrapper();
+            if(!( courseListNew.isEmpty() )){
+                pseudoWrapper.courseList=courseListNew;
+                pseudoWrapper.fieldList=fieldName;
+                pseudoWrapper.message='Course Data Fetched';
+            }else{
+                pseudoWrapper.courseList=new List<Courses__c>();
+                pseudoWrapper.fieldList=fieldName;
+                pseudoWrapper.message='Course Data not Available';
+            }
+            return pseudoWrapper;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static String getAccountId(Id userId) {
+        try {
+            User portalUser = [select Id, AccountId from User where Id = :userId limit 1];
+            if(portalUser!=null)
+                return portalUser.AccountId;
+            else
+                return '';
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    @AuraEnabled(cacheable=true)
+    public static boolean checkAppliedCourses(string accId, string appliedCourseId){
+        try {
+            List<AppliedCourse__c> appliedCourseList=[select id , Account__c, Course__c from AppliedCourse__c where Account__c=:accId and Course__c=:appliedCourseId];
+            if(!(appliedCourseList.isEmpty())){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static boolean applyCourse(string accId, string appliedCourseId){
+        try {
+            List<AppliedCourse__c> appliedCourseList=[select id , Account__c, Course__c from AppliedCourse__c where Account__c=:accId and Course__c=:appliedCourseId];
+            Account acc=[select Id, Name from Account where id=:accId limit 1];
+            if(accId!=null && appliedCourseId!=null){
+                AppliedCourse__c AppliedCourseNew=new AppliedCourse__c(Name='Course '+acc.Name+' '+(appliedCourseList.size()+1),
+                                                                       Account__c=accId,
+                                                                       Course__c=appliedCourseId);
+                if(AppliedCourseNew!=null){
+                    insert AppliedCourseNew;
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+    public class CourseWrapper{
+        @AuraEnabled
+        public List<Courses__c> courseList{get;set;}
+        @AuraEnabled
+        public List<String> fieldList{get;set;}
+        @AuraEnabled
+        public string message{get;set;}
+    }
+}
