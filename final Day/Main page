@@ -1,0 +1,291 @@
+############################################
+JS
+############################################
+import { LightningElement, wire, track } from 'lwc';
+import fetchCourse from '@salesforce/apex/GetCourses.fetchCourse';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import areaOfInterest from '@salesforce/schema/Courses__c.AreaOfInterest__c';
+import deliveryMode from '@salesforce/schema/Courses__c.DeliveryMode__c';
+import location from '@salesforce/schema/Courses__c.Location__c';
+
+export default class FetchCourses extends LightningElement {
+    @track courseData;
+    @track mainData;
+    @track areaOfInterestPkl;
+    @track deliveryModePkl;
+    @track locationPkl;
+    @track message;
+    @track courseFieldData;
+    @track selectedCourse;
+    courseDataLen = 0;
+    searchValue;
+    areaOfInterestPklVal = 'All';
+    deliveryModePklVal = 'All';
+    locationPklVal = 'All';
+    startDateVal = 'All';
+    @track sortOptionVal = '';
+    isAllRecordOpen = true;
+    baseUrl = 'https://d5j00000dprdsea5-dev-ed.develop.my.site.com';
+    get sortOptions() {
+        return [
+            { label: 'Soonest', value: 'SOONEST' },
+            { label: 'A-Z', value: 'AZ' },
+            { label: 'Z-A', value: 'ZA' },
+        ];
+    }
+    @wire(fetchCourse)
+    wiredContacts(result) {
+        if (result.data) {
+            this.mainData = result.data.courseList;
+            this.message = result.data.message;
+            this.courseFieldData = result.data.fieldList;
+            this.courseData = this.mainData;
+            this.courseDataLen = this.courseData.length;
+            this.sortOptionVal = 'SOONEST';
+        } else if (result.error) {
+            console.error('Error fetching data:', result.error);
+            this.message = 'Error fetching data';
+        }
+        console.log(JSON.stringify(this.courseData));
+        console.log(JSON.stringify(this.message));
+        console.log(JSON.stringify(this.courseFieldData));
+    }
+    @wire(getPicklistValues, {
+        recordTypeId: '012000000000000AA2',
+        fieldApiName: areaOfInterest
+    })
+    wireAoiValue({ data, error }) {
+        if (data) {
+            this.areaOfInterestPkl = data.values;
+            this.error = undefined;
+        }
+        if (error) {
+            this.areaOfInterestPkl = undefined;
+            this.error = error;
+        }
+    }
+    @wire(getPicklistValues, {
+        recordTypeId: '012000000000000AAA',
+        fieldApiName: deliveryMode
+    })
+    wireDeliveryValue({ data, error }) {
+        if (data) {
+            this.deliveryModePkl = data.values;
+            this.error = undefined;
+        }
+        if (error) {
+            this.deliveryModePkl = undefined;
+            this.error = error;
+        }
+    }
+    @wire(getPicklistValues, {
+        recordTypeId: '012000000000000AAA',
+        fieldApiName: location
+    })
+    wireLocationValue({ data, error }) {
+        if (data) {
+            this.locationPkl = data.values;
+            this.error = undefined;
+        }
+        if (error) {
+            this.locationPkl = undefined;
+            this.error = error;
+        }
+    }
+    handleAoiChange(event) {
+        this.areaOfInterestPklVal = event.detail.value;
+    }
+    handleStartDateChange(event) {
+        this.startDateVal = event.detail.value;
+    }
+    handleDeliveryChange(event) {
+        this.deliveryModePklVal = event.detail.value;
+
+    }
+    handleLocationChange(event) {
+        this.locationPklVal = event.detail.value;
+    }
+    handleSearchChange(event) {
+        this.searchValue = event.target.value;
+    }
+    handleSearch() {
+        this.handleFilterData();
+    }
+    handleFilterData() {
+        debugger;
+        let filteredData = this.mainData;
+        if (this.searchValue !== undefined) {
+            filteredData = filteredData.filter(course => course.Name.toLowerCase().includes(this.searchValue.toLowerCase()));
+        }
+        if (this.areaOfInterestPklVal !== 'All') {
+            filteredData = filteredData.filter(course => course.AreaOfInterest__c === this.areaOfInterestPklVal);
+        }
+        if (this.deliveryModePklVal !== 'All') {
+            filteredData = filteredData.filter(course => course.DeliveryMode__c === this.deliveryModePklVal);
+        }
+        if (this.locationPklVal !== 'All') {
+            filteredData = filteredData.filter(course => course.Location__c === this.locationPklVal);
+        }
+        if (this.startDateVal !== 'All') {
+            filteredData = filteredData.filter(course => new Date(course.StartDate__c) >= new Date(this.startDateVal));
+        }
+        this.courseData = filteredData;
+        this.courseDataLen = this.courseData.length;
+    }
+    handleClearResult() {
+        this.areaOfInterestPklVal = 'All';
+        this.deliveryModePklVal = 'All';
+        this.locationPklVal = 'All';
+        this.startDateVal = 'All';
+        this.handleFilterData();
+        this.courseDataLen = this.courseData.length;
+
+    }
+    handleUpdateFields() {
+        this.handleFilterData();
+    }
+    handleSortChange(event) {
+        this.sortOptionVal = event.detail.value;
+        let filteredData = JSON.parse(JSON.stringify(this.courseData));
+        if (this.sortOptionVal === 'SOONEST') {
+            filteredData.sort((a, b) => a.StartDate__c.localeCompare(b.StartDate__c));
+        } else if (this.sortOptionVal === 'AZ') {
+            filteredData.sort((a, b) => a.Name.localeCompare(b.Name));
+        } else if (this.sortOptionVal === 'ZA') {
+            filteredData.sort((a, b) => b.Name.localeCompare(a.Name));
+        }
+        this.courseData = filteredData;
+    }
+    handleCourseClick(event) {
+        const courseId = event.currentTarget.dataset.id;
+        this.selectedCourse = this.courseData.find(course => course.Id === courseId);
+        this.isAllRecordOpen = false;
+    }
+    handleCourseOpening(event) {
+        const courseId = event.currentTarget.dataset.id;
+        const webpageUrl = this.baseUrl + '/s/coursedetails?id=' + courseId;
+        window.open(webpageUrl, '_self');
+    }
+    handleMouseOver(event) {
+        const card = event.currentTarget;
+        card.style.boxShadow = '0 8px 16px 0 rgba(0, 0, 0, 0.2)';
+    }
+    
+    handleMouseOut(event) {
+        const card = event.currentTarget;
+        card.style.boxShadow = '0 4px 8px 0 rgba(0, 0, 0, 0)';
+    }
+}
+############################################
+HTML
+############################################
+<template>
+    <lightning-layout>
+        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+            <div class="test slds-col" style="color:navy; margin-left:20px;font-weight: bold;">
+                <lightning-input type="text" label="Search for" placeholder="e.g.event name"
+                    onchange={handleSearchChange}></lightning-input>
+            </div>
+            <div class="slds-col" style="margin-top: 24px;">
+                <lightning-button icon-name="utility:search" onclick={handleSearch}></lightning-button>
+            </div>
+        </div>
+    </lightning-layout>
+    <hr>
+    <lightning-layout>
+        <div class="slds-align_absolute-center slds-grid slds-wrap">
+            <!-- Area Of Interest -->
+            <div class="slds-col slds-size_1-of-6" style="margin-left: 20px;width: 250px;">
+                <lightning-combobox name="areaOfInterest" label="Area of Interest" value={areaOfInterestPklVal}
+                    options={areaOfInterestPkl} onchange={handleAoiChange}>
+                </lightning-combobox>
+            </div>
+
+            <!-- Start Date -->
+            <div class="slds-col slds-size_1-of-6" style="margin-left: 20px; width: 250px;">
+                <lightning-input type="date" label="Start Date" value={startDateVal} onchange={handleStartDateChange}>
+                </lightning-input>
+            </div>
+
+            <!-- Location -->
+            <div class="slds-col slds-size_1-of-6" style="margin-left: 20px; width: 250px;">
+                <lightning-combobox name="deliveryMode" label="Delivery Mode" value={deliveryModePklVal}
+                    placeholder="--Select--" options={deliveryModePkl} onchange={handleDeliveryChange}>
+                </lightning-combobox>
+            </div>
+
+            <!-- Delivery Mode -->
+            <div class="slds-col slds-size_1-of-6" style="margin-left: 20px;width: 250px;">
+                <lightning-combobox name="location" label="Location" value={locationPklVal} options={locationPkl}
+                    onchange={handleLocationChange}>
+                </lightning-combobox>
+            </div>
+
+            <!-- Update Fields Button -->
+            <div class="slds-col slds-size_1-of-19" style="margin-top: 23px;margin-left: 20px;width: 180px;">
+                <lightning-button label="Update Fields" variant="brand" onclick={handleUpdateFields}></lightning-button>
+            </div>
+
+            <!-- Clear Result Button -->
+            <div class="slds-col slds-size_1-of-19" style="margin-top: 23px; margin-right:20px">
+                <lightning-button label="Clear Result" variant="base" onclick={handleClearResult}></lightning-button>
+            </div>
+        </div>
+    </lightning-layout>
+    <hr>
+    <div style="display: flex;justify-content: space-between;align-items: center;margin-bottom: 20px;">
+        <div style="flex: 1;">
+            <p style="color: blue; font-weight: lighter; font-size: larger; margin-left:20px">{courseDataLen}
+                record(s) found</p>
+        </div>
+        <div style="margin-left: 20px;">
+            <label style="font-weight: lighter; font-size: larger; color:blue">Sort By:</label>
+            <div style="width: 150px;margin-top: -23px;">
+                <lightning-combobox name="sortOrder" value={sortOptionVal} options={sortOptions}
+                    onchange={handleSortChange} style="font-size: larger; padding:5px"></lightning-combobox>
+            </div>
+        </div>
+    </div>
+    <div class="body demo-only demo-only--sizing slds-grid slds-wrap slds-align_absolute-center"
+        style="max-width: 1600px; margin:auto;box-sizing: border-box;">
+        <template for:each={courseData} for:item="course">
+            <div class="slds-col slds-size_1-of-4" key={course.Id} data-id={course.Id} style="width:auto; margin: 10px; transition: box-shadow 0.3s ease;" onclick={handleCourseOpening} onmouseover={handleMouseOver} onmouseout={handleMouseOut}>
+                <div class="slds-m-around_medium" style="background: #fff;width: 290px; height: 337px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);">
+                    <!-- Image Section -->
+                    <div class="image-section">
+                        <img src={course.ImageUrl__c} alt={course.Name}
+                            style="width: 100%; height: 145px; object-fit: cover; display: block; background: #eee;" />
+                    </div>
+
+                    <!-- Course Start Date Section -->
+                    <div class="red-date-section"
+                        style="margin: 10px;font-weight: 600; font-size: 14px; line-height: 150%; color: #984140;">
+                        <lightning-formatted-date-time value={course.StartDate__c} weekday="short" month="short"
+                            day="2-digit" hour="numeric" minute="2-digit"></lightning-formatted-date-time>
+                        <br />
+                    </div>
+
+                    <!-- Course Name Section -->
+                    <div class="course-name-section"
+                        style="margin: 10px;font-weight: bold; font-size: 18px; line-height: 118%; color: #35659e;">
+                        {course.Name}
+                        <br />
+                    </div>
+
+                    <!-- HeadingText__c Section -->
+                    <div class="heading-text-section"
+                        style="margin: 10px;font-size: 14px; line-height: 120%; color: #030303; margin-top: 10px;">
+                        {course.HeadingText__c}
+                        <br />
+                    </div>
+
+                    <!-- DeliveryMode__c Section -->
+                    <div class="delivery-mode-section"
+                        style="margin: 10px;font-size: 14px; line-height: 120%; color: #030303;">
+                        {course.DeliveryMode__c},
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
