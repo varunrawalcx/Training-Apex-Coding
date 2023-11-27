@@ -201,7 +201,7 @@ export default class CourseComponent extends LightningElement {
         this.recordId = this.pageReference.state.id;
         this.userId = portalUserId;
         this.handleGetAccountId();
-        this.handleCheckAppliedCourses();
+        console.log('recordId>>>>>>>',this.recordId);
     }
 
     
@@ -242,6 +242,7 @@ export default class CourseComponent extends LightningElement {
             .then(result => {
                 this.pAccId = result;
                 this.isLogin=true;
+                this.handleCheckAppliedCourses();
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
