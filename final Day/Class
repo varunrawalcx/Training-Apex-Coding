@@ -46,10 +46,15 @@ public class GetCourses {
     @AuraEnabled(cacheable=true)
     public static boolean checkAppliedCourses(string accId, string appliedCourseId){
         try {
+            system.debug('Account Id:-  '+accId);
+            system.debug('course Id:-  '+appliedCourseId);
             List<AppliedCourse__c> appliedCourseList=[select id , Account__c, Course__c from AppliedCourse__c where Account__c=:accId and Course__c=:appliedCourseId];
-            if(!(appliedCourseList.isEmpty())){
+            system.debug('applied Courses checking part:- '+appliedCourseList);
+            if(appliedCourseList.size()>0){
+                system.debug('true');
                 return true;
             }else{
+                system.debug('false');
                 return false;
             }
         } catch (Exception e) {
@@ -60,14 +65,18 @@ public class GetCourses {
     @AuraEnabled
     public static boolean applyCourse(string accId, string appliedCourseId){
         try {
-            List<AppliedCourse__c> appliedCourseList=[select id , Account__c, Course__c from AppliedCourse__c where Account__c=:accId and Course__c=:appliedCourseId];
+            List<AppliedCourse__c> appliedCourseList=[select id , Account__c, Course__c from AppliedCourse__c where Account__c=:accId];
+            system.debug('applied Courses:- '+appliedCourseList);
             Account acc=[select Id, Name from Account where id=:accId limit 1];
+            system.debug('Account ID:- '+acc.Name);
             if(accId!=null && appliedCourseId!=null){
                 AppliedCourse__c AppliedCourseNew=new AppliedCourse__c(Name='Course '+acc.Name+' '+(appliedCourseList.size()+1),
                                                                        Account__c=accId,
                                                                        Course__c=appliedCourseId);
+                system.debug('New Applied Course:- '+AppliedCourseNew);
                 if(AppliedCourseNew!=null){
                     insert AppliedCourseNew;
+                    system.debug('New Applied Course:- '+AppliedCourseNew);
                     return true;
                 }
             }
